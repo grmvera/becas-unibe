@@ -5,8 +5,8 @@ import { LayoutComponent } from './layout/layout.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
-  { 
-    path: 'registro', 
+  {
+    path: 'registro',
     loadComponent: () =>
       import('./features/auth/registro/registro.component').then(m => m.RegistroComponent)
   },
@@ -28,6 +28,7 @@ export const routes: Routes = [
           import('./pages/usuarios/usuarios.component').then(
             (m) => m.UsuariosComponent
           ),
+        data: { roles: ['admin'] }
       },
       {
         path: 'crear-admin',
@@ -35,9 +36,10 @@ export const routes: Routes = [
           import('./pages/adm-usuarios/crear-admin.component').then(
             (m) => m.CrearAdminComponent
           ),
-      },
-
+        data: { roles: ['admin'] }
+      }
     ],
   },
+
   { path: '**', redirectTo: '' },
 ];

@@ -2,57 +2,52 @@ import { Injectable } from '@angular/core';
 import {
   CanActivate,
   CanActivateChild,
-  Router,
-  UrlTree,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot
+  RouterStateSnapshot,
+  UrlTree,
+  Router
 } from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { getDoc, doc, getFirestore } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
-
   constructor(private router: Router) {}
 
-  private async checkAuth(): Promise<boolean | UrlTree> {
+  private checkAuthAndRole(route?: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     const auth = getAuth();
     const user = auth.currentUser;
+    const db = getFirestore();
 
-    const validate = async (user: any) => {
-      const ref = doc(db, 'usuarios', user.uid);
-      const docSnap = await getDoc(ref);
+    return new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        unsubscribe();
 
-      if (docSnap.exists() && docSnap.data()['activo'] === true) {
-        return true;
-      } else {
-        return this.router.parseUrl('/');
-      }
-    };
-
-    if (user) {
-      return await validate(user);
-    }
-
-    return new Promise(resolve => {
-      const unsubscribe = onAuthStateChanged(
-        auth,
-        async (user) => {
-          unsubscribe();
-          if (user) {
-            resolve(await validate(user));
-          } else {
-            resolve(this.router.parseUrl('/registro'));
-          }
-        },
-        (error) => {
-          console.error('Error al verificar autenticación:', error);
-          resolve(this.router.parseUrl('/'));
+        if (!user) {
+          return resolve(this.router.parseUrl('/'));
         }
-      );
+
+        const userRef = doc(db, 'usuarios', user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) return resolve(this.router.parseUrl('/'));
+
+        const userData = userSnap.data();
+        const activo = userData['activo'] ?? true;
+        const rol = userData['rol'] ?? 'user';
+
+        if (!activo) return resolve(this.router.parseUrl('/'));
+
+        const requiredRoles = route?.data?.['roles'] as string[] | undefined;
+
+        if (!requiredRoles || requiredRoles.includes(rol)) {
+          return resolve(true);
+        } else {
+          return resolve(this.router.parseUrl('/dashboard'));
+        }
+      }, () => resolve(this.router.parseUrl('/')));
     });
   }
 
@@ -60,13 +55,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    return this.checkAuth();
+    return this.checkAuthAndRole(route);
   }
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    return this.checkAuth();
+    return this.checkAuthAndRole(childRoute);
   }
 }

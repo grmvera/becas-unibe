@@ -69,7 +69,8 @@ export class LoginComponent {
         cedula: data['cedula'],
         apellidos: data['apellidos'],
         correo: data['correo'],
-        activo: data['activo']
+        activo: data['activo'],
+        rol: data['rol'] || 'user'
       };
 
       this.usuarioService.setUsuario(usuario);

@@ -8,6 +8,7 @@ export interface Usuario {
   apellidos: string;
   correo: string;
   activo: boolean;
+  rol: 'admin' | 'student';
 }
 
 @Injectable({
