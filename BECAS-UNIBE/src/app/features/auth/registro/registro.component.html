@@ -1,0 +1,38 @@
+<h2>Registra una Nueva Cuenta</h2>
+
+<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" autocomplete="off" class="form-container">
+    <div class="form-group">
+        <input formControlName="nombres" placeholder="Nombres" />
+        <input formControlName="apellidos" placeholder="Apellidos" />
+    </div>
+
+    <input formControlName="correo" type="email" placeholder="Correo" />
+    <input formControlName="cedula" placeholder="Cédula" />
+    <input formControlName="fechaNacimiento" type="date" placeholder="Fecha de nacimiento" />
+
+    <select formControlName="genero">
+        <option value="">Seleccione género</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+    </select>
+
+    <input formControlName="estadoCivil" placeholder="Estado civil" />
+    <input formControlName="nacionalidad" placeholder="Nacionalidad" />
+    <input formControlName="telefonoFijo" placeholder="Teléfono fijo" />
+    <input formControlName="telefonoMovil" placeholder="Teléfono móvil" />
+    <input formControlName="anioIngreso" placeholder="Año de ingreso" />
+    <input formControlName="carrera" placeholder="Carrera" />
+    <input formControlName="password" type="password" placeholder="Contraseña" />
+
+    <button type="submit">Registrar</button>
+    <button type="button" (click)="irALogin()">¿Ya tienes cuenta? Inicia sesión</button>
+</form>
+
+<p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+<div *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched">
+    <small class="error" *ngIf="registroForm.get('password')?.errors?.['required']">La contraseña es
+        obligatoria.</small>
+    <small class="error" *ngIf="registroForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6
+        caracteres.</small>
+</div>

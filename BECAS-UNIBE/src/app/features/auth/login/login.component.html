@@ -4,7 +4,7 @@
     <input type="email" formControlName="email" placeholder="Correo electrónico" />
     <input type="password" formControlName="password" placeholder="Contraseña" />
     <button type="submit">Ingresar</button>
-    <button type="button">Registrarse</button>
+    <button type="button" (click)="irARegistro()">¿No tienes cuenta? Regístrate</button>
   </form>
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

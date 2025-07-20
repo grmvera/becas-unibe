@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import { environment } from '../../../../environments/environments';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
-
+import { auth } from '../../../../firebase';
 
 @Component({
   standalone: true,
@@ -23,14 +21,15 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+  }
 
-    initializeApp(environment.firebase);
+  irARegistro() {
+    this.router.navigate(['/registro']);
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      const auth = getAuth();
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           this.router.navigate(['/dashboard']);
