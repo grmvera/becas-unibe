@@ -1,0 +1,17 @@
+<div class="sidebar">
+  <div class="usuario-contenedor">
+    <div class="usuario-box">
+      <p>👋 Hola, <strong>{{ nombreUsuario }}</strong></p>
+    </div>
+
+    <div class="menu-superior">
+      <button (click)="navegar('/dashboard')">🏠 Inicio</button>
+      <button (click)="navegar('/perfil')">👤 Perfil</button>
+      <button (click)="navegar('/reportes')">📊 Reportes</button>
+    </div>
+  </div>
+
+  <div class="menu-inferior">
+    <button class="logout" (click)="logout()">🚪 Cerrar sesión</button>
+  </div>
+</div>
