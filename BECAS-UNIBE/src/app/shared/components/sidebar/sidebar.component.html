@@ -6,8 +6,17 @@
 
     <div class="menu-superior">
       <button (click)="navegar('/dashboard')">🏠 Inicio</button>
-      <button (click)="navegar('/usuarios')">👤 Usarios</button>
-      <button (click)="navegar('/reportes')">📊 Reportes</button>
+
+      <!-- Solo para admin -->
+      <ng-container *ngIf="usuario?.rol === 'admin'">
+        <button (click)="navegar('/usuarios')">👤 Usuarios</button>
+        <button (click)="navegar('/crear-admin')">➕ Crear Admin</button>
+      </ng-container>
+
+      <!-- Solo para estudiante -->
+      <ng-container *ngIf="usuario?.rol === 'student'">
+        <button (click)="navegar('/postulacion')">🎓 Postulación de Becas</button>
+      </ng-container>
     </div>
   </div>
 

@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { getAuth, signOut } from 'firebase/auth';
 import { Usuario, UsuarioService } from '../../services/usuario.service';
-
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule, NgIf]
 })
+
 export class SidebarComponent implements OnInit {
   nombreUsuario: string | null = null;
+  usuario: Usuario | null = null;
 
   constructor(
     private router: Router,
@@ -21,7 +22,8 @@ export class SidebarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.usuarioService.getUsuario().subscribe((usuario: Usuario | null) => {
+    this.usuarioService.getUsuario().subscribe((usuario) => {
+      this.usuario = usuario;
       this.nombreUsuario = usuario?.nombres || null;
     });
   }
@@ -29,6 +31,7 @@ export class SidebarComponent implements OnInit {
   logout() {
     const auth = getAuth();
     signOut(auth).then(() => {
+      this.usuarioService.limpiarUsuario();
       this.router.navigate(['/']);
     });
   }
