@@ -56,7 +56,8 @@ export class RegistroComponent {
         uid,
         correo,
         ...userData,
-        activo: true
+        activo: true,
+        rol: 'student'
       });
 
       this.router.navigate(['/']);

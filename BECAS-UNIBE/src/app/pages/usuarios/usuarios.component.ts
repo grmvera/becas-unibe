@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Usuario } from '../../shared/services/usuario.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios',
@@ -19,15 +20,22 @@ export class UsuariosComponent implements OnInit {
   usuariosFiltrados: Usuario[] = [];
   filtroCedula: string = '';
 
-  constructor(private firestore: Firestore) {
+  constructor(
+    private firestore: Firestore,
+    private router: Router,
+  ) {
     const usuariosRef = collection(this.firestore, 'usuarios');
     this.usuarios$ = collectionData(usuariosRef, { idField: 'uid' }) as Observable<Usuario[]>;
+  }
+
+  irACrearAdmin() {
+    this.router.navigate(['/crear-admin']);
   }
 
   ngOnInit() {
     this.usuarios$.subscribe((usuarios) => {
       this.usuariosOriginal = usuarios;
-      this.filtrarUsuarios(); // filtra en base al estado actual de filtroCedula
+      this.filtrarUsuarios();
     });
   }
 

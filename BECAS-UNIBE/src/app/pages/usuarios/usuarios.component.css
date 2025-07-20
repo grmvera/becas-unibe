@@ -60,3 +60,28 @@ th {
   margin-top: 1rem;
   text-align: center;
 }
+
+.busqueda-acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn-crear-admin {
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-crear-admin:hover {
+  background-color: #218838;
+}
+

@@ -1,13 +1,19 @@
 <div class="tabla-container">
   <h2>📋 Lista de Usuarios</h2>
 
-  <input
-    type="text"
-    [(ngModel)]="filtroCedula"
-    (input)="filtrarUsuarios()"
-    placeholder="🔍 Buscar por cédula..."
-    class="input-buscador"
-  />
+  <div class="busqueda-acciones">
+    <input
+      type="text"
+      [(ngModel)]="filtroCedula"
+      (input)="filtrarUsuarios()"
+      placeholder="🔍 Buscar por cédula..."
+      class="input-buscador"
+    />
+
+    <button class="btn-crear-admin" (click)="irACrearAdmin()">
+      ➕ Crear Administrador
+    </button>
+  </div>
 
   <table>
     <thead>

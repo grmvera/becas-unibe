@@ -1,0 +1,15 @@
+<div class="form-container">
+  <h2>Crear Administrador</h2>
+
+  <form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="nombres" placeholder="Nombres" />
+    <input type="text" formControlName="apellidos" placeholder="Apellidos" />
+    <input type="text" formControlName="cedula" placeholder="Cédula" />
+    <input type="email" formControlName="correo" placeholder="Correo" />
+    <input type="password" formControlName="password" placeholder="Contraseña" />
+
+    <button type="submit">Registrar Administrador</button>
+  </form>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

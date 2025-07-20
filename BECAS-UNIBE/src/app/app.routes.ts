@@ -29,6 +29,13 @@ export const routes: Routes = [
             (m) => m.UsuariosComponent
           ),
       },
+      {
+        path: 'crear-admin',
+        loadComponent: () =>
+          import('./pages/adm-usuarios/crear-admin.component').then(
+            (m) => m.CrearAdminComponent
+          ),
+      },
 
     ],
   },
