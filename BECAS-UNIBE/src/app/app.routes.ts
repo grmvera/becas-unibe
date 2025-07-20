@@ -5,6 +5,11 @@ import { LayoutComponent } from './layout/layout.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
+  { 
+    path: 'registro', 
+    loadComponent: () =>
+      import('./features/auth/registro/registro.component').then(m => m.RegistroComponent)
+  },
   {
     path: '',
     component: LayoutComponent,
