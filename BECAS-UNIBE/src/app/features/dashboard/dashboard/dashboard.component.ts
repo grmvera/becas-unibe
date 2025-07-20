@@ -7,7 +7,7 @@ import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.com
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule],
 })
 export class DashboardComponent {
 

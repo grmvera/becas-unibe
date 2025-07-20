@@ -1,0 +1,18 @@
+<p>usuarios works!</p>
+<div class="tabla-container">
+  <h2>📋 Lista de Usuarios</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios$ | async">
+        <td>{{ usuario.nombres }}</td>
+        <td>{{ usuario.correo }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
