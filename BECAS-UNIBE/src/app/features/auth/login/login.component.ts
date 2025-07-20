@@ -28,16 +28,29 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          this.router.navigate(['/dashboard']);
-        })
-        .catch(error => {
-          this.errorMessage = 'Credenciales inválidas o usuario no existe.';
-          console.error(error);
-        });
+    this.errorMessage = ''; // Limpiar errores previos
+
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Completa todos los campos correctamente.';
+      return;
     }
+
+    const { email, password } = this.loginForm.value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        // Redirigir después de una pequeña pausa para evitar conflictos con el guard
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 0);
+      })
+      .catch(error => {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          this.errorMessage = 'Credenciales inválidas o usuario no existe.';
+        } else {
+          this.errorMessage = 'Ocurrió un error al iniciar sesión. Inténtalo más tarde.';
+        }
+        console.error('Login error:', error);
+      });
   }
 }
