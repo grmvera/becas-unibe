@@ -66,6 +66,7 @@ export class LoginComponent {
       const usuario: Usuario = {
         uid,
         nombres: data['nombres'],
+        cedula: data['cedula'],
         apellidos: data['apellidos'],
         correo: data['correo'],
         activo: data['activo']

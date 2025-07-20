@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export interface Usuario {
   uid: string;
   nombres: string;
+  cedula: string;
   apellidos: string;
   correo: string;
   activo: boolean;
