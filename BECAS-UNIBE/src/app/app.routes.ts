@@ -45,6 +45,14 @@ export const routes: Routes = [
             (m) => m.PeriodosComponent
           ),
         data: { roles: ['admin'] }
+      },
+      {
+        path: 'lista-periodos',
+        loadComponent: () =>
+          import('./pages/lista-periodos/lista-periodos.component').then(
+            (m) => m.ListaPeriodosComponent
+          ),
+        data: { roles: ['admin'] }
       }
     ],
   },

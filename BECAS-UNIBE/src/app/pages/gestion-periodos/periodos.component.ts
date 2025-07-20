@@ -1,21 +1,25 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
+import { firstValueFrom } from 'rxjs';
+import Swal from 'sweetalert2';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-periodos',
   templateUrl: './periodos.component.html',
   styleUrls: ['./periodos.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class PeriodosComponent {
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private router: Router
   ) {
     this.form = this.fb.group({
       nombrePeriodo: ['', Validators.required],
@@ -36,16 +40,45 @@ export class PeriodosComponent {
     if (this.form.invalid) return;
 
     try {
+      const periodosRef = collection(this.firestore, 'periodos');
+      const q = query(periodosRef, where('estado', '==', true));
+      const periodosActivos = await firstValueFrom(collectionData(q));
+
+      if (periodosActivos.length > 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Ya existe un periodo activo',
+          text: 'Debes desactivarlo antes de crear uno nuevo.',
+          confirmButtonColor: '#3085d6',
+        });
+        return;
+      }
+
       const data = {
         ...this.form.value,
-        estado: true // Se agrega el estado por defecto
+        estado: true
       };
-      await addDoc(collection(this.firestore, 'periodos'), data);
-      alert('Periodo guardado correctamente');
+
+      await addDoc(periodosRef, data);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Periodo guardado correctamente',
+        showConfirmButton: false,
+        timer: 1800
+      });
+
       this.form.reset();
+      this.router.navigate(['/lista-periodos']);
+
     } catch (e) {
       console.error('Error al guardar el periodo', e);
-      alert('Error al guardar');
+      Swal.fire({
+        icon: 'error',
+        title: 'Ocurrió un error',
+        text: 'No se pudo guardar el periodo. Intenta nuevamente.',
+        confirmButtonColor: '#d33'
+      });
     }
   }
 

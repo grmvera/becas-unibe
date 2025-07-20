@@ -1,0 +1,26 @@
+<h2>📋 Lista de Periodos</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre del periodo</th>
+      <th>Estado</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let periodo of periodos$ | async">
+      <td>{{ periodo.nombrePeriodo }}</td>
+      <td>
+        <span [class.activo]="periodo.estado" [class.inactivo]="!periodo.estado">
+          {{ periodo.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+      <td>
+        <button (click)="cambiarEstado(periodo)">
+          {{ periodo.estado ? 'Desactivar' : 'Activar' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
