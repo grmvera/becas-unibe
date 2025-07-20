@@ -1,0 +1,19 @@
+<h2 class="titulo">📅 Gestión de Periodos</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario-periodos">
+    <div class="campo">
+        <label>Nombre del periodo:</label>
+        <input type="text" formControlName="nombrePeriodo" />
+    </div>
+
+    <div class="campo" *ngFor="let campo of camposFechas">
+        <label>{{ etiquetas[campo] }}:</label>
+        <input type="date" formControlName="{{ campo }}" />
+    </div>
+    <div class="alerta">
+        ⚠️ Una vez guardada la información no se podrá modificar.
+    </div>
+    <div class="botones">
+        <button type="submit" [disabled]="form.invalid">Guardar</button>
+    </div>
+</form>

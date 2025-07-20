@@ -37,6 +37,14 @@ export const routes: Routes = [
             (m) => m.CrearAdminComponent
           ),
         data: { roles: ['admin'] }
+      },
+      {
+        path: 'periodos',
+        loadComponent: () =>
+          import('./pages/gestion-periodos/periodos.component').then(
+            (m) => m.PeriodosComponent
+          ),
+        data: { roles: ['admin'] }
       }
     ],
   },
