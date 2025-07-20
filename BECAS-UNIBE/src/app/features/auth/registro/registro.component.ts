@@ -55,7 +55,8 @@ export class RegistroComponent {
       await setDoc(doc(db, 'usuarios', uid), {
         uid,
         correo,
-        ...userData
+        ...userData,
+        activo: true
       });
 
       this.router.navigate(['/']);

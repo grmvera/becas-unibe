@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
 import { auth, db } from '../../../../firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import { UsuarioService, Usuario } from '../../../shared/services/usuario.service';
-
 
 @Component({
   standalone: true,
@@ -34,7 +33,7 @@ export class LoginComponent {
     this.router.navigate(['/registro']);
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.errorMessage = '';
 
     if (this.loginForm.invalid) {
@@ -44,35 +43,43 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.value;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (cred) => {
-        const uid = cred.user.uid;
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
 
-        const docRef = doc(db, 'usuarios', uid);
-        const docSnap = await getDoc(docRef);
+      const docRef = doc(db, 'usuarios', uid);
+      const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const usuario: Usuario = {
-            uid,
-            nombres: data['nombres'],
-            correo: data['correo']
-          };
+      if (!docSnap.exists()) {
+        this.errorMessage = 'No se encontraron datos del usuario.';
+        return;
+      }
 
+      const data = docSnap.data();
 
-          this.usuarioService.setUsuario(usuario);
-          this.router.navigate(['dashboard']);
-        } else {
-          this.errorMessage = 'No se encontraron datos del usuario.';
-        }
-      })
-      .catch(error => {
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-          this.errorMessage = 'Credenciales inválidas o usuario no existe.';
-        } else {
-          this.errorMessage = 'Ocurrió un error al iniciar sesión. Inténtalo más tarde.';
-        }
-        console.error('Login error:', error);
-      });
+      if (!data['activo']) {
+        await signOut(auth);
+        this.errorMessage = 'Tu cuenta ha sido desactivada. Contacta con el administrador.';
+        return;
+      }
+
+      const usuario: Usuario = {
+        uid,
+        nombres: data['nombres'],
+        apellidos: data['apellidos'],
+        correo: data['correo'],
+        activo: data['activo']
+      };
+
+      this.usuarioService.setUsuario(usuario);
+      this.router.navigate(['dashboard']);
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        this.errorMessage = 'Credenciales inválidas o usuario no existe.';
+      } else {
+        this.errorMessage = 'Ocurrió un error al iniciar sesión. Inténtalo más tarde.';
+      }
+      console.error('Login error:', error);
+    }
   }
 }

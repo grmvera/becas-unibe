@@ -4,7 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export interface Usuario {
   uid: string;
   nombres: string;
+  apellidos: string;
   correo: string;
+  activo: boolean;
 }
 
 @Injectable({

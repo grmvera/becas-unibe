@@ -1,18 +1,33 @@
-<p>usuarios works!</p>
 <div class="tabla-container">
-  <h2>📋 Lista de Usuarios</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Correo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let usuario of usuarios$ | async">
-        <td>{{ usuario.nombres }}</td>
-        <td>{{ usuario.correo }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <h2>📋 Lista de Usuarios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Aciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let usuario of usuarios$ | async">
+                <td>{{ usuario.nombres }}</td>
+                <td>{{ usuario.apellidos }}</td>
+                <td>{{ usuario.correo }}</td>
+                <td>
+                    <button *ngIf="usuario.activo; else activar" (click)="desactivarUsuario(usuario)"
+                        title="Desactivar usuario">
+                        <i class="fas fa-trash-alt" style="color: red;"></i>
+                    </button>
+
+                    <ng-template #activar>
+                        <button (click)="activarUsuario(usuario)" title="Activar usuario">
+                            <i class="fas fa-undo" style="color: green;"></i>
+                        </button>
+                    </ng-template>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
 </div>

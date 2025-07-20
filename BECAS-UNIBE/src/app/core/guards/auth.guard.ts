@@ -8,6 +8,8 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -16,21 +18,32 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(private router: Router) {}
 
-  private checkAuth(): Promise<boolean | UrlTree> {
+  private async checkAuth(): Promise<boolean | UrlTree> {
     const auth = getAuth();
     const user = auth.currentUser;
 
+    const validate = async (user: any) => {
+      const ref = doc(db, 'usuarios', user.uid);
+      const docSnap = await getDoc(ref);
+
+      if (docSnap.exists() && docSnap.data()['activo'] === true) {
+        return true;
+      } else {
+        return this.router.parseUrl('/');
+      }
+    };
+
     if (user) {
-      return Promise.resolve(true);
+      return await validate(user);
     }
 
     return new Promise(resolve => {
       const unsubscribe = onAuthStateChanged(
         auth,
-        (user) => {
+        async (user) => {
           unsubscribe();
           if (user) {
-            resolve(true);
+            resolve(await validate(user));
           } else {
             resolve(this.router.parseUrl('/registro'));
           }
