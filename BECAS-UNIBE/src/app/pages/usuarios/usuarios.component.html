@@ -1,0 +1,62 @@
+<div class="tabla-container">
+  <h2>📋 Lista de Usuarios</h2>
+
+  <div class="busqueda-acciones">
+    <input
+      type="text"
+      [(ngModel)]="filtroCedula"
+      (input)="filtrarUsuarios()"
+      placeholder="🔍 Buscar por cédula..."
+      class="input-buscador"
+    />
+
+    <button class="btn-crear-admin" (click)="irACrearAdmin()">
+      ➕ Crear Administrador
+    </button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuariosFiltrados">
+        <td>{{ usuario.cedula }}</td>
+        <td>{{ usuario.nombres }}</td>
+        <td>{{ usuario.apellidos }}</td>
+        <td>{{ usuario.correo }}</td>
+        <td>
+          <button
+            *ngIf="usuario.activo; else activar"
+            (click)="desactivarUsuario(usuario)"
+            title="Desactivar usuario"
+            class="btn-icon desactivar"
+          >
+            <i class="fas fa-user-slash"></i>
+          </button>
+
+          <ng-template #activar>
+            <button
+              (click)="activarUsuario(usuario)"
+              title="Activar usuario"
+              class="btn-icon activar"
+            >
+              <i class="fas fa-user-check"></i>
+            </button>
+          </ng-template>
+        </td>
+      </tr>
+      <tr *ngIf="usuariosFiltrados.length === 0">
+        <td colspan="5" class="mensaje-no-resultados">
+          ❗ No se encontraron usuarios con esa cédula.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

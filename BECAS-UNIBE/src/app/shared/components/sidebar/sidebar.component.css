@@ -1,0 +1,86 @@
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #f7f7f7, #eaeaea);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.usuario-contenedor {
+  display: flex;
+  flex-direction: column;
+}
+
+.usuario-box {
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+}
+
+.menu-superior {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.5rem 1rem;
+}
+
+.menu-superior button,
+.menu-inferior button {
+  background: none;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  color: #2e2e2e;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.1s;
+}
+
+.menu-superior button:hover,
+.menu-inferior button:hover {
+  background-color: #dcdcdc;
+  transform: translateX(3px);
+}
+
+.menu-inferior {
+  padding: 1rem;
+}
+
+.logout {
+  color: #c62828;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 180px;
+  }
+
+  .usuario-box {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+
+  .menu-superior,
+  .menu-inferior {
+    padding: 1rem;
+  }
+
+  .menu-superior button,
+  .menu-inferior button {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+}

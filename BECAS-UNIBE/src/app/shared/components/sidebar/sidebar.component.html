@@ -1,0 +1,28 @@
+<div class="sidebar">
+  <div class="usuario-contenedor">
+    <div class="usuario-box">
+      <p>👋 Hola, <strong>{{ nombreUsuario }}</strong></p>
+    </div>
+
+    <div class="menu-superior">
+      <button (click)="navegar('/dashboard')">🏠 Inicio</button>
+
+      <!-- Solo para admin -->
+      <ng-container *ngIf="usuario?.rol === 'admin'">
+        <button (click)="navegar('/usuarios')">👤 Usuarios</button>
+        <button (click)="navegar('/crear-admin')">➕ Crear Admin</button>
+        <button (click)="navegar('/periodos')">🗓️ Gestion Periodos</button>
+        <button (click)="navegar('/lista-periodos')">📋 Lista de Periodos</button>
+      </ng-container>
+
+      <!-- Solo para estudiante -->
+      <ng-container *ngIf="usuario?.rol === 'student'">
+        <button (click)="navegar('/postulacion')">🎓 Postulación de Becas</button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="menu-inferior">
+    <button class="logout" (click)="logout()">🚪 Cerrar sesión</button>
+  </div>
+</div>
