@@ -23,13 +23,12 @@ export class DashboardComponent implements OnInit {
       const docRef = snapshot.docs[0];
       const data = docRef.data();
 
-      // Obtener subdocumento: informacionPublica/detalles
       const detallesRef = doc(this.firestore, `periodos/${docRef.id}/informacionPublica/detalles`);
       const detallesSnap = await getDoc(detallesRef);
 
       if (detallesSnap.exists()) {
         const detallesData = detallesSnap.data();
-        this.periodoActivo = { ...data, ...detallesData }; // fusionar info
+        this.periodoActivo = { ...data, ...detallesData };
       } else {
         this.periodoActivo = data;
       }
