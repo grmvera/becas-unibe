@@ -1,0 +1,55 @@
+<h3>Formulario Socioeconómico</h3>
+<h4>Datos personales</h4>
+
+<form [formGroup]="form" (ngSubmit)="siguientePaso()">
+    <div class="form-group">
+        <label>Suba una imagen actual del postulante</label>
+        <input type="file" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="form-group">
+        <label>¿Es independiente económicamente?</label>
+        <div>
+            <button type="button" (click)="form.get('independiente')?.setValue(true)">SI</button>
+            <button type="button" (click)="form.get('independiente')?.setValue(false)">NO</button>
+        </div>
+    </div>
+    <div class="form-group" *ngIf="form.get('independiente')?.value">
+        <label>Tipo de empleo</label>
+        <select formControlName="empleo">
+            <option value="">Seleccione</option>
+            <option value="privado">Empleado privado</option>
+            <option value="publico">Empleado público</option>
+            <option value="independiente">Independiente</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>¿Vive solo?</label>
+        <div>
+            <button type="button" (click)="form.get('viveSolo')?.setValue(true)">SI</button>
+            <button type="button" (click)="form.get('viveSolo')?.setValue(false)">NO</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>¿Qué semestre cursa?</label>
+        <input type="text" formControlName="semestre">
+    </div>
+
+    <fieldset formGroupName="direccion">
+        <legend>Dirección</legend>
+        <div class="direccion-grid">
+            <input type="text" placeholder="Calle" formControlName="calle">
+            <input type="text" placeholder="Número" formControlName="numero">
+            <input type="text" placeholder="Barrio" formControlName="barrio">
+            <input type="text" placeholder="Departamento" formControlName="departamento">
+            <input type="text" placeholder="Piso" formControlName="piso">
+            <input type="text" placeholder="Sector" formControlName="sector">
+        </div>
+    </fieldset>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button type="submit">Siguiente</button>
+    </div>
+</form>

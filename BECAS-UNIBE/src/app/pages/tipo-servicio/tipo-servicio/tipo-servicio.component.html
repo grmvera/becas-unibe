@@ -2,9 +2,7 @@
   <h2>Tipo de servicio</h2>
 
   <div class="menu-servicios">
-    <div
-      *ngFor="let servicio of tiposServicios"
-      class="opcion"
+    <div *ngFor="let servicio of tiposServicios" class="opcion"
       [ngClass]="{ 'activo': servicioSeleccionado === servicio }"
       (click)="seleccionarServicio(servicio)">
       {{ servicio }}
@@ -12,8 +10,13 @@
   </div>
 
   <div *ngIf="servicioSeleccionado === 'TIPOS DE BECAS'" class="subopciones">
-    <div class="subopcion" *ngFor="let beca of becas">
+    <div class="subopcion" *ngFor="let beca of becas" (click)="seleccionarBeca(beca)">
       {{ beca }}
     </div>
+  </div>
+
+  <div *ngIf="becaSeleccionada">
+    <h3>Formulario: {{ becaSeleccionada }}</h3>
+    <app-datos-personales [tipoBeca]="becaSeleccionada"></app-datos-personales>
   </div>
 </div>
