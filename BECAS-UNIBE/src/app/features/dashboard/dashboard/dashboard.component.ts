@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, doc, query, where, getDocs, getDoc } from '@angular/fire/firestore';
 
 @Component({
   standalone: true,
@@ -20,7 +20,19 @@ export class DashboardComponent implements OnInit {
     const snapshot = await getDocs(q);
 
     if (!snapshot.empty) {
-      this.periodoActivo = snapshot.docs[0].data();
+      const docRef = snapshot.docs[0];
+      const data = docRef.data();
+
+      // Obtener subdocumento: informacionPublica/detalles
+      const detallesRef = doc(this.firestore, `periodos/${docRef.id}/informacionPublica/detalles`);
+      const detallesSnap = await getDoc(detallesRef);
+
+      if (detallesSnap.exists()) {
+        const detallesData = detallesSnap.data();
+        this.periodoActivo = { ...data, ...detallesData }; // fusionar info
+      } else {
+        this.periodoActivo = data;
+      }
     }
   }
 }

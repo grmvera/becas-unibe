@@ -51,3 +51,21 @@
   font-size: 16px;
   color: #a33;
 }
+
+.reunion-info {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f5f8ff;
+  border: 1px solid #ccd7ea;
+  border-radius: 8px;
+}
+
+.reunion-info h3 {
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.reunion-info p {
+  margin: 0.3rem 0;
+  font-size: 15px;
+}
