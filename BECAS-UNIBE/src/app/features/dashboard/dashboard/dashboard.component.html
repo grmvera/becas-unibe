@@ -1,4 +1,4 @@
-<div *ngIf="periodoActivo" class="dashboard-container">
+<div *ngIf="periodoActivo && usuarioRol === 'student'" class="dashboard-container">
   <h2 class="titulo">
     <i class="fa-regular fa-calendar-days"></i>
     Proceso de Becas - {{ periodoActivo.nombrePeriodo }}
@@ -50,6 +50,6 @@
 
 </div>
 
-<div *ngIf="!periodoActivo" class="sin-periodo">
+<div *ngIf="!periodoActivo && usuarioRol === 'student'" class="sin-periodo">
   <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
 </div>
