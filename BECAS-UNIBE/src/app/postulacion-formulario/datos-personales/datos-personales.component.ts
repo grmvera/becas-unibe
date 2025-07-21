@@ -1,36 +1,28 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 
 @Component({
-  standalone: true,
   selector: 'app-datos-personales',
+  standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './datos-personales.component.html',
   styleUrls: ['./datos-personales.component.css']
 })
-export class DatosPersonalesComponent {
+export class DatosPersonalesComponent implements OnChanges {
   @Input() tipoBeca!: string;
-  @Output() pasoCompletado = new EventEmitter<any>(); 
+  @Input() tipoServicio!: string; // 👈 nuevo input
+  @Input() form!: FormGroup;
+  @Output() pasoCompletado = new EventEmitter<void>();
 
-  form: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      imagen: [null],
-      independiente: [null],
-      empleo: [''],
-      viveSolo: [null],
-      semestre: [''],
-      direccion: this.fb.group({
-        calle: [''],
-        numero: [''],
-        barrio: [''],
-        departamento: [''],
-        piso: [''],
-        sector: ['']
-      })
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    // Se asegura de que los datos se actualicen en el formulario si cambian desde el padre
+    if (changes['tipoBeca'] && this.form) {
+      this.form.get('tipoBeca')?.setValue(this.tipoBeca);
+    }
+    if (changes['tipoServicio'] && this.form) {
+      this.form.get('tipoServicio')?.setValue(this.tipoServicio);
+    }
   }
 
   onFileSelected(event: Event) {
@@ -45,11 +37,7 @@ export class DatosPersonalesComponent {
   }
 
   siguientePaso() {
-    const datosFormulario = {
-      tipoBeca: this.tipoBeca,
-      ...this.form.value
-    };
-    console.log('Formulario completo:', datosFormulario);
-    this.pasoCompletado.emit(datosFormulario);
+    console.log('Formulario Personal:', this.form.value);
+    this.pasoCompletado.emit();
   }
 }

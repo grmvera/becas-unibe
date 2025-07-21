@@ -14,14 +14,16 @@
     </div>
   </div>
 
-  <div *ngIf="etapaFormulario === 1 && becaSeleccionada">
-    <h3>Formulario: {{ becaSeleccionada }}</h3>
-    <app-datos-personales [tipoBeca]="becaSeleccionada" (pasoCompletado)="avanzarGrupoFamiliar($event)">
-    </app-datos-personales>
-  </div>
+  <app-datos-personales
+    *ngIf="etapaFormulario === 1 && (servicioSeleccionado && (servicioSeleccionado !== 'TIPOS DE BECAS' || becaSeleccionada))"
+    [tipoBeca]="becaSeleccionada || ''" [tipoServicio]="servicioSeleccionado || ''" [form]="datosPersonalesForm"
+    (pasoCompletado)="avanzarGrupoFamiliar($event)">
+  </app-datos-personales>
 
-  <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [datosPersonales]="datosPersonales"
-    (volverAtras)="etapaFormulario = 1">
+
+
+  <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [form]="grupoFamiliarForm"
+    [datosPersonales]="datosPersonalesForm.value" (volverAtras)="regresarADatosPersonales()">
   </app-datos-grupo-familiar>
 
 

@@ -11,30 +11,28 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
   styleUrls: ['./datos-grupo-familiar.component.css']
 })
 export class DatosGrupoFamiliarComponent {
+  @Input() form!: FormGroup;
   @Input() datosPersonales!: any;
   @Output() volverAtras = new EventEmitter<void>();
-  grupoFamiliarForm: FormGroup;
 
-  categorias = [
+
+  categorias: string[] = [
     'Alimentos', 'Alquiler', 'Luz', 'Internet', 'Agua',
     'Telefono fijo', 'Medicina', 'TV cable', 'Educación', 'Transporte'
   ];
 
-  constructor(private fb: FormBuilder) {
-    this.grupoFamiliarForm = this.fb.group({
-      tipoVivienda: [''],
-      gastos: this.fb.group(
-        Object.fromEntries(this.categorias.map(c => [c, [0]]))
-      ),
-      nota: [''],
-      vehiculos: this.fb.array([
-        this.crearVehiculo()
-      ])
-    });
-  }
+  constructor(private fb: FormBuilder) { }
 
   get vehiculos(): FormArray {
-    return this.grupoFamiliarForm.get('vehiculos') as FormArray;
+    return this.form.get('vehiculos') as FormArray;
+  }
+
+  agregarVehiculo() {
+    this.vehiculos.push(this.crearVehiculo());
+  }
+
+  eliminarVehiculo(index: number) {
+    this.vehiculos.removeAt(index);
   }
 
   crearVehiculo(): FormGroup {
@@ -46,24 +44,16 @@ export class DatosGrupoFamiliarComponent {
     });
   }
 
-  agregarVehiculo() {
-    this.vehiculos.push(this.crearVehiculo());
-  }
-
-  eliminarVehiculo(index: number) {
-    this.vehiculos.removeAt(index);
-  }
-
   calcularTotal(): number {
-    const gastos = this.grupoFamiliarForm.get('gastos')?.value;
-    return Object.values(gastos).reduce((acc: number, val: any) => acc + Number(val || 0), 0);
+    const gastos = this.form.get('gastos')?.value;
+    return Object.values(gastos || {}).reduce((acc: number, val: any) => acc + Number(val || 0), 0);
   }
 
   siguiente() {
-    console.log(this.grupoFamiliarForm.value);
+    console.log('Datos grupo familiar:', this.form.value);
   }
 
   regresar() {
-    this.volverAtras.emit(); // Emitimos el evento para retroceder
+    this.volverAtras.emit();
   }
 }

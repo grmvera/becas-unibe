@@ -1,6 +1,6 @@
 <h3>Datos del grupo familiar</h3>
 
-<form [formGroup]="grupoFamiliarForm" (ngSubmit)="siguiente()">
+<form [formGroup]="form" (ngSubmit)="siguiente()">
     <label>TIPO DE VIVIENDA</label>
     <select formControlName="tipoVivienda">
         <option value="">Seleccione</option>
@@ -40,6 +40,6 @@
 
     <div class="navegacion">
         <button type="button" (click)="regresar()">⬅ Atrás</button>
-        <button type="submit">Siguiente ➡</button>
+        <button type="submit">Guardar y Continuar</button>
     </div>
 </form>
