@@ -1,0 +1,28 @@
+<div *ngIf="periodoActivo" class="contenedor">
+  <h2 class="titulo">INFORMACIÓN PÚBLICA</h2>
+  <h3 class="subtitulo">Periodo activo: {{ nombrePeriodo }}</h3>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+    <div class="grid-form">
+      <div class="form-group" *ngFor="let key of camposTexto">
+        <label>{{ etiquetas[key] }}</label>
+        <textarea formControlName="{{ key }}" rows="2"></textarea>
+      </div>
+    </div>
+
+    <div class="grid-form">
+      <div class="form-group" *ngFor="let key of camposArchivo">
+        <label>{{ etiquetas[key] }}</label>
+        <input type="file" (change)="subirArchivo($event, key)" />
+      </div>
+    </div>
+
+    <div class="boton-container">
+      <button type="submit" class="btn-guardar" [disabled]="form.invalid">Guardar información</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="!periodoActivo" class="alerta">
+  No hay un periodo activo actualmente.
+</div>

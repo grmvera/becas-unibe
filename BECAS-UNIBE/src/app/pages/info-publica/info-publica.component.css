@@ -1,0 +1,87 @@
+.contenedor {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.titulo {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #1b2e4b;
+}
+
+.subtitulo {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #444;
+}
+
+textarea, input[type="file"] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 14px;
+  width: 100%;
+}
+
+textarea:focus, input[type="file"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.boton-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-guardar {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-guardar:disabled {
+  background-color: #b0c4de;
+  cursor: not-allowed;
+}
+
+.alerta {
+  text-align: center;
+  color: #856404;
+  background-color: #fff3cd;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px;
+}
