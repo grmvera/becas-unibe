@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
@@ -10,7 +10,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
   styleUrls: ['./datos-personales.component.css']
 })
 export class DatosPersonalesComponent {
-  @Input() tipoBeca!: string;  // Recibe el nombre de la beca seleccionada
+  @Input() tipoBeca!: string;
+  @Output() pasoCompletado = new EventEmitter<any>(); 
 
   form: FormGroup;
 
@@ -49,7 +50,6 @@ export class DatosPersonalesComponent {
       ...this.form.value
     };
     console.log('Formulario completo:', datosFormulario);
-
-    // Aquí puedes guardar en Firebase o emitir evento al padre
+    this.pasoCompletado.emit(datosFormulario);
   }
 }

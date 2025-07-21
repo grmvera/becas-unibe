@@ -1,0 +1,45 @@
+<h3>Datos del grupo familiar</h3>
+
+<form [formGroup]="grupoFamiliarForm" (ngSubmit)="siguiente()">
+    <label>TIPO DE VIVIENDA</label>
+    <select formControlName="tipoVivienda">
+        <option value="">Seleccione</option>
+        <option value="propia">Propia</option>
+        <option value="alquilada">Alquilada</option>
+        <option value="prestada">Prestada</option>
+    </select>
+
+    <h4>GASTOS MENSUALES</h4>
+    <div class="gastos-grid" formGroupName="gastos">
+        <div *ngFor="let categoria of categorias">
+            <label>{{ categoria }}</label>
+            <input type="number" [formControlName]="categoria" />
+        </div>
+    </div>
+
+    <p><strong>TOTAL: </strong>$ {{ calcularTotal() }}</p>
+
+    <label>Nota (si es necesario):</label>
+    <input type="text" formControlName="nota" />
+
+    <h4>VEHÍCULOS</h4>
+    <div formArrayName="vehiculos">
+        <div *ngFor="let v of vehiculos.controls; let i = index" [formGroupName]="i" class="vehiculo-grupo">
+            <select formControlName="tipo">
+                <option>Automóvil</option>
+                <option>Motocicleta</option>
+            </select>
+            <input placeholder="Marca" formControlName="marca" type="text" />
+            <input placeholder="Modelo" formControlName="modelo" type="text" />
+            <input placeholder="Año" formControlName="anio" type="number" />
+            <button type="button" (click)="eliminarVehiculo(i)">🗑️</button>
+        </div>
+    </div>
+    <button type="button" (click)="agregarVehiculo()">➕ Añadir Vehículo</button>
+
+
+    <div class="navegacion">
+        <button type="button" (click)="regresar()">⬅ Atrás</button>
+        <button type="submit">Siguiente ➡</button>
+    </div>
+</form>

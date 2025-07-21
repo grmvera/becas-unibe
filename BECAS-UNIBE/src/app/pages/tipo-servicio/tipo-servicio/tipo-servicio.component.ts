@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-personales/datos-personales.component';
+import { DatosGrupoFamiliarComponent } from '../../../postulacion-formulario/datos-grupo-familiar/datos-grupo-familiar.component';
 
 @Component({
   selector: 'app-tipo-servicio',
   standalone: true,
-  imports: [CommonModule, DatosPersonalesComponent],
+  imports: [CommonModule, DatosPersonalesComponent, DatosGrupoFamiliarComponent],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
 })
@@ -25,6 +26,15 @@ export class TipoServicioComponent {
 
   servicioSeleccionado: string | null = null;
   becaSeleccionada: string | null = null;
+  etapaFormulario = 1; // 1 = personales, 2 = grupo familiar
+  datosPersonales: any = null;
+
+  avanzarGrupoFamiliar(datos: any) {
+    this.datosPersonales = datos;
+    this.etapaFormulario = 2; // Aquí haces el cambio a la siguiente etapa
+    console.log('Datos personales recibidos:', datos);
+  }
+
 
   seleccionarServicio(servicio: string) {
     this.servicioSeleccionado = this.servicioSeleccionado === servicio ? null : servicio;

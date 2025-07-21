@@ -3,8 +3,7 @@
 
   <div class="menu-servicios">
     <div *ngFor="let servicio of tiposServicios" class="opcion"
-      [ngClass]="{ 'activo': servicioSeleccionado === servicio }"
-      (click)="seleccionarServicio(servicio)">
+      [ngClass]="{ 'activo': servicioSeleccionado === servicio }" (click)="seleccionarServicio(servicio)">
       {{ servicio }}
     </div>
   </div>
@@ -15,8 +14,15 @@
     </div>
   </div>
 
-  <div *ngIf="becaSeleccionada">
+  <div *ngIf="etapaFormulario === 1 && becaSeleccionada">
     <h3>Formulario: {{ becaSeleccionada }}</h3>
-    <app-datos-personales [tipoBeca]="becaSeleccionada"></app-datos-personales>
+    <app-datos-personales [tipoBeca]="becaSeleccionada" (pasoCompletado)="avanzarGrupoFamiliar($event)">
+    </app-datos-personales>
   </div>
+
+  <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [datosPersonales]="datosPersonales"
+    (volverAtras)="etapaFormulario = 1">
+  </app-datos-grupo-familiar>
+
+
 </div>
