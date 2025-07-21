@@ -53,7 +53,15 @@ export const routes: Routes = [
             (m) => m.ListaPeriodosComponent
           ),
         data: { roles: ['admin'] }
-      }
+      },
+      {
+        path: 'info-publica',
+        loadComponent: () =>
+          import('./pages/info-publica/info-publica.component').then(
+            (m) => m.InfoPublicaComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 

@@ -1,1 +1,55 @@
-<p>hola dashboard works!</p>
+<div *ngIf="periodoActivo && usuarioRol === 'student'" class="dashboard-container">
+  <h2 class="titulo">
+    <i class="fa-regular fa-calendar-days"></i>
+    Proceso de Becas - {{ periodoActivo.nombrePeriodo }}
+  </h2>
+
+  <table class="tabla-proceso">
+    <thead>
+      <tr>
+        <th colspan="2">📋 PROCESO DE BECAS, AYUDAS ECONÓMICAS Y GUARDERÍA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="fecha">{{ periodoActivo.socializacion }}</td>
+        <td>Socialización Información Postulaciones</td>
+      </tr>
+      <tr>
+        <td class="fecha">{{ periodoActivo.reunionInformativa }}</td>
+        <td>Reunión informativa proceso de becas, ayudas económicas y guardería</td>
+      </tr>
+      <tr>
+        <td class="fecha">{{ periodoActivo.inicioEntregaDocs }} al {{ periodoActivo.finEntregaDocs }}</td>
+        <td>Entrega de documentos para postulación</td>
+      </tr>
+      <tr>
+        <td class="fecha">{{ periodoActivo.reunionComite }}</td>
+        <td>Reunión Comité de Becas</td>
+      </tr>
+      <tr>
+        <td class="fecha">{{ periodoActivo.resultadoBeca }}</td>
+        <td>Resultados de Becas</td>
+      </tr>
+      <tr>
+        <td class="fecha">{{ periodoActivo.inicioApelacion }} al {{ periodoActivo.finApelacion }}</td>
+        <td>Fechas para apelaciones</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="reunion-info" *ngIf="periodoActivo?.temaZoom">
+    <h3>📢 Reunión informativa para postulantes</h3>
+    <p><strong>Tema:</strong> {{ periodoActivo.temaZoom }}</p>
+    <p><strong>Hora:</strong> {{ periodoActivo.horaZoom }}</p>
+    <p><strong>Entrar Zoom Reunión:</strong><br>
+      <a [href]="periodoActivo.linkZoom" target="_blank">{{ periodoActivo.linkZoom }}</a>
+    </p>
+    <p><strong>ID de reunión:</strong> {{ periodoActivo.idZoom }}</p>
+  </div>
+
+</div>
+
+<div *ngIf="!periodoActivo && usuarioRol === 'student'" class="sin-periodo">
+  <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
+</div>
