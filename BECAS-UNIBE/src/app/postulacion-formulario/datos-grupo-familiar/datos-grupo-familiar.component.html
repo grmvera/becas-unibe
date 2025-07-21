@@ -1,13 +1,31 @@
 <h3>Datos del grupo familiar</h3>
 
 <form [formGroup]="form" (ngSubmit)="siguiente()">
-    <label>TIPO DE VIVIENDA</label>
-    <select formControlName="tipoVivienda">
-        <option value="">Seleccione</option>
-        <option value="propia">Propia</option>
-        <option value="alquilada">Alquilada</option>
-        <option value="prestada">Prestada</option>
-    </select>
+    <div class="tipo-vivienda-con-info">
+        <div class="tipo-vivienda-select">
+            <label>TIPO DE VIVIENDA</label>
+            <select formControlName="tipoVivienda">
+                <option value="">Seleccione</option>
+                <option value="propia">Propia</option>
+                <option value="alquilada">Alquilada</option>
+                <option value="prestada">Prestada</option>
+            </select>
+        </div>
+
+        <div class="info-box">
+            <ul>
+                <li>Si el solicitante alquila con otras personas, deberá consignar el monto que le corresponde pagar
+                    (adjuntar nota especificando con cuántas personas comparte la vivienda y cómo se distribuyen los
+                    gastos).</li>
+                <li><strong>Solo se llenan los datos del solicitante cuando este no vive con su grupo familiar.</strong>
+                </li>
+                <li>Adjuntar copias del pago de servicios básicos de los últimos dos meses antes de la fecha de
+                    postulación. <strong>(Estos documentos, SÍ APLICAN A BECA SOCIO-ECONÓMICA; para otros tipos de beca,
+                        debe solamente llenar la información)</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
 
     <h4>GASTOS MENSUALES</h4>
     <div class="gastos-grid" formGroupName="gastos">
