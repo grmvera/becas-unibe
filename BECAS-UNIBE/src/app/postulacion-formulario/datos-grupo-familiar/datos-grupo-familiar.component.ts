@@ -14,6 +14,7 @@ export class DatosGrupoFamiliarComponent {
   @Input() form!: FormGroup;
   @Input() datosPersonales!: any;
   @Output() volverAtras = new EventEmitter<void>();
+  @Output() avanzarSocioeconomico = new EventEmitter<any>();
 
 
   categorias: string[] = [
@@ -51,6 +52,7 @@ export class DatosGrupoFamiliarComponent {
 
   siguiente() {
     console.log('Datos grupo familiar:', this.form.value);
+    this.avanzarSocioeconomico.emit(this.form.value);
   }
 
   regresar() {

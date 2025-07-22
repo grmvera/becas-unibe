@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosGrupoFamiliarComponent } from '../../../postulacion-formulario/datos-grupo-familiar/datos-grupo-familiar.component';
 import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-personales/datos-personales.component';
+import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/dato-socioeconomicos/dato-socioeconomicos.component';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -13,6 +14,7 @@ import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-
     FormsModule,
     DatosPersonalesComponent,
     DatosGrupoFamiliarComponent,
+    DatosSocioeconomicoComponent
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -42,11 +44,12 @@ export class TipoServicioComponent {
 
   datosPersonalesForm: FormGroup;
   grupoFamiliarForm: FormGroup;
+  socioeconomicoForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.datosPersonalesForm = this.fb.group({
-      tipoServicio: [''],        // <- nuevo campo
-      tipoBeca: [''],            // <- nuevo campo
+      tipoServicio: [''],
+      tipoBeca: [''],
       imagen: [null],
       independiente: [null],
       empleo: [''],
@@ -68,12 +71,27 @@ export class TipoServicioComponent {
         Object.fromEntries(this.categorias.map(c => [c, [0]]))
       ),
       nota: [''],
-      vehiculos: this.fb.array([this.fb.group({
-        tipo: ['Automóvil'],
-        marca: [''],
-        modelo: [''],
-        anio: ['']
-      })])
+      vehiculos: this.fb.array([
+        this.fb.group({
+          tipo: ['Automóvil'],
+          marca: [''],
+          modelo: [''],
+          anio: ['']
+        })
+      ])
+    });
+
+    this.socioeconomicoForm = this.fb.group({
+      integrantes: this.fb.array([
+        this.fb.group({
+          parentesco: ['Postulante'],
+          nombre: [''],
+          apellido: [''],
+          actividad: [''],
+          ingresos: [0],
+          ingresosComplementarios: [0]
+        })
+      ])
     });
   }
 
@@ -92,6 +110,22 @@ export class TipoServicioComponent {
     this.datosPersonalesForm.patchValue(datos);
     this.etapaFormulario = 2;
     console.log('Datos personales recibidos:', datos);
+  }
+
+  avanzarDatosSocioeconomico(datos: any) {
+    this.grupoFamiliarForm.patchValue(datos);
+    this.etapaFormulario = 3;
+    console.log('Grupo familiar recibido:', datos);
+  }
+
+  enviarFormularioFinal(datos: any) {
+    this.socioeconomicoForm.patchValue(datos);
+    console.log('Formulario completo:', {
+      datosPersonales: this.datosPersonalesForm.value,
+      grupoFamiliar: this.grupoFamiliarForm.value,
+      datosSocioeconomicos: this.socioeconomicoForm.value
+    });
+
   }
 
   regresarADatosPersonales() {

@@ -20,11 +20,12 @@
     (pasoCompletado)="avanzarGrupoFamiliar($event)">
   </app-datos-personales>
 
-
-
   <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [form]="grupoFamiliarForm"
-    [datosPersonales]="datosPersonalesForm.value" (volverAtras)="regresarADatosPersonales()">
+    [datosPersonales]="datosPersonalesForm.value" (volverAtras)="regresarADatosPersonales()"
+    (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event)">
   </app-datos-grupo-familiar>
 
-
+  <app-datos-socioeconomico *ngIf="etapaFormulario === 3" [form]="socioeconomicoForm"
+    (volverAtras)="etapaFormulario = 2" (finalizar)="enviarFormularioFinal($event)">
+  </app-datos-socioeconomico>
 </div>
