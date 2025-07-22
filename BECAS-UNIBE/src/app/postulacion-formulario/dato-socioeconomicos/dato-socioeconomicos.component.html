@@ -1,0 +1,76 @@
+<div class="info-box-socioeconomico">
+    <p><strong>DATOS SOCIO-ECONÓMICOS FAMILIARES</strong></p>
+    <p>
+        Presentar fotocopia de la cédula de ciudadanía de los mayores de 18 años inclusive y de los ingresos de todos
+        los integrantes de la familia que realicen tareas rentadas.
+        <br>
+        <strong>(SOLO PARA BECAS SOCIO-ECONÓMICAS)</strong><br>
+        <strong>PARA TODO TIPO DE BECA</strong>
+    </p>
+    <ol>
+        <li>Consigna en el siguiente cuadro a todas las personas que dependen económicamente de su familia (tengan o no
+            ingresos), INCLUIDO USTED y hermanos que estudien en otro lugar.</li>
+        <li>Si es independiente (es aquel que se mantiene económicamente solo, sin ayuda familiar, no tiene pareja ni
+            hijos a cargo) coloca solamente sus datos. No podrá presentar la solicitud con ingreso total cero ($0.00),
+            dado que quedará fuera del proceso, pues se debe justificar la subsistencia de la familia.</li>
+        <li>En caso de recibir ayuda económica en especie (por ejemplo, mercadería), estimar valor aproximado en dinero
+            y colocar el monto en el cuadro.</li>
+    </ol>
+</div>
+
+
+<form [formGroup]="form" (ngSubmit)="siguiente()">
+    <div formArrayName="integrantes">
+        <div *ngFor="let integrante of integrantes.controls; let i = index" [formGroupName]="i" class="fila">
+
+            <div>
+                <label>Parentesco</label>
+                <select formControlName="parentesco">
+                    <option *ngFor="let p of parentescos" [value]="p">{{ p }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Nombre</label>
+                <input formControlName="nombre" placeholder="Nombre" />
+            </div>
+
+            <div>
+                <label>Apellido</label>
+                <input formControlName="apellido" placeholder="Apellido" />
+            </div>
+
+            <div>
+                <label>Actividad</label>
+                <select formControlName="actividad">
+                    <option *ngFor="let a of actividades" [value]="a">{{ a }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Ingresos</label>
+                <input type="number" formControlName="ingresos" placeholder="$ Ingresos" />
+            </div>
+
+            <div>
+                <label>Ingresos complementarios</label>
+                <input type="number" formControlName="ingresosComplementarios" placeholder="$ Complementarios" />
+            </div>
+
+            <div style="display: flex; align-items: end; padding-bottom: 5px;">
+                <button type="button" (click)="eliminarIntegrante(i)" aria-label="Eliminar integrante">🗑</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <button type="button" (click)="agregarIntegrante()">➕ Añadir Integrante</button>
+
+    <p><strong>Ingresos del núcleo familiar: </strong>$ {{ calcularTotalFamiliar() }}</p>
+
+    <div class="navegacion">
+        <button type="button" (click)="regresar()">⬅ Atrás</button>
+        <button type="submit">Siguiente</button>
+    </div>
+</form>

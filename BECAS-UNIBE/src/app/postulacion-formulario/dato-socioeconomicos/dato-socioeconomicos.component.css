@@ -1,0 +1,76 @@
+form {
+  max-width: 100%;
+  margin: auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+  overflow-x: auto;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr) 40px;
+  gap: 10px;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+input, select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button[type="button"] {
+  background-color: #007bff;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+.navegacion {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.navegacion button {
+  background-color: #28a745;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.navegacion button:hover {
+  background-color: #218838;
+}
+
+.navegacion button:first-child {
+  background-color: #6c757d;
+}
+
+.navegacion button:first-child:hover {
+  background-color: #5a6268;
+}
+
+p strong {
+  font-size: 1.1rem;
+}
