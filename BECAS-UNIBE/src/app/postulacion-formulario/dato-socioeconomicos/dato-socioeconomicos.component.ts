@@ -12,7 +12,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } f
 export class DatosSocioeconomicoComponent {
   @Input() form!: FormGroup;
   @Output() volverAtras = new EventEmitter<void>();
-  @Output() pasoCompletado = new EventEmitter<void>();
+  @Output() avanzarSalud = new EventEmitter<any>();
 
   // Lista de parentescos para el select
   parentescos: string[] = [
@@ -55,7 +55,7 @@ export class DatosSocioeconomicoComponent {
 
   siguiente() {
     console.log('Datos socioeconómicos:', this.form.value);
-    this.pasoCompletado.emit();
+    this.avanzarSalud.emit(this.form.value);
   }
 
   regresar() {

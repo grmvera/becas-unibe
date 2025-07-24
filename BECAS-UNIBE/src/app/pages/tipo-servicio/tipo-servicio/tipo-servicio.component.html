@@ -14,18 +14,28 @@
     </div>
   </div>
 
+  <!-- Etapa 1: Datos personales -->
   <app-datos-personales
     *ngIf="etapaFormulario === 1 && (servicioSeleccionado && (servicioSeleccionado !== 'TIPOS DE BECAS' || becaSeleccionada))"
     [tipoBeca]="becaSeleccionada || ''" [tipoServicio]="servicioSeleccionado || ''" [form]="datosPersonalesForm"
     (pasoCompletado)="avanzarGrupoFamiliar($event)">
   </app-datos-personales>
 
+  <!-- Etapa 2: Grupo familiar -->
   <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [form]="grupoFamiliarForm"
     [datosPersonales]="datosPersonalesForm.value" (volverAtras)="regresarADatosPersonales()"
     (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event)">
   </app-datos-grupo-familiar>
 
+  <!-- Etapa 3: Datos socioeconómicos -->
   <app-datos-socioeconomico *ngIf="etapaFormulario === 3" [form]="socioeconomicoForm"
-    (volverAtras)="etapaFormulario = 2" (finalizar)="enviarFormularioFinal($event)">
+    (volverAtras)="etapaFormulario = 2" (avanzarDatosSalud)="avanzarDatosSalud($event)">
   </app-datos-socioeconomico>
+
+  <!-- Etapa 4: Datos de salud -->
+  <app-dato-salud *ngIf="etapaFormulario === 4" [form]="datosSaludForm" (volverAtras)="etapaFormulario = 3"
+    (finalizar)="enviarFormularioFinal($event)">
+  </app-dato-salud>
+
+
 </div>

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosGrupoFamiliarComponent } from '../../../postulacion-formulario/datos-grupo-familiar/datos-grupo-familiar.component';
 import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-personales/datos-personales.component';
 import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/dato-socioeconomicos/dato-socioeconomicos.component';
+import { DatoSaludComponent } from '../../../postulacion-formulario/dato-salud/dato-salud.component';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -14,7 +15,8 @@ import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/da
     FormsModule,
     DatosPersonalesComponent,
     DatosGrupoFamiliarComponent,
-    DatosSocioeconomicoComponent
+    DatosSocioeconomicoComponent,
+    DatoSaludComponent
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -45,6 +47,7 @@ export class TipoServicioComponent {
   datosPersonalesForm: FormGroup;
   grupoFamiliarForm: FormGroup;
   socioeconomicoForm: FormGroup;
+  datosSaludForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.datosPersonalesForm = this.fb.group({
@@ -93,6 +96,22 @@ export class TipoServicioComponent {
         })
       ])
     });
+
+    this.datosSaludForm = this.fb.group({
+      salud: this.fb.array([
+        this.fb.group({
+          parentesco: ['Postulante'],
+          problema: ['Ninguna'],
+          ayuda: ['Sí']
+        })
+      ]),
+      situaciones: this.fb.group({
+        universidadPrivada: [false],
+        fallecimientoPadres: [false],
+        otrasDificultades: [false]
+      })
+    });
+
   }
 
   seleccionarServicio(servicio: string) {
@@ -118,12 +137,21 @@ export class TipoServicioComponent {
     console.log('Grupo familiar recibido:', datos);
   }
 
+  avanzarDatosSalud(datos: any) {
+    this.datosSaludForm.patchValue(datos);
+    this.etapaFormulario = 4;
+    console.log('Datos de salud recibidos:', datos);
+  }
+
+
+
   enviarFormularioFinal(datos: any) {
     this.socioeconomicoForm.patchValue(datos);
     console.log('Formulario completo:', {
       datosPersonales: this.datosPersonalesForm.value,
       grupoFamiliar: this.grupoFamiliarForm.value,
-      datosSocioeconomicos: this.socioeconomicoForm.value
+      datosSocioeconomicos: this.socioeconomicoForm.value,
+      datosSalud: this.datosSaludForm.value
     });
 
   }
