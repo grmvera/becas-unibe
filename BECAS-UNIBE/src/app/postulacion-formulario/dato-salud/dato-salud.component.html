@@ -1,0 +1,42 @@
+<h3>Datos de salud</h3>
+
+<div class="info-box-salud">
+    <p>
+        Presentar certificados médicos actualizados, si se considera problemas de salud de uno de los integrantes o el
+        estudiante.
+        <strong>(SI APLICA A BECA SOCIO – ECONÓMICA)</strong>, caso contrario, solamente llene el apartado; de presentar
+        la dificultad en el núcleo familiar.
+    </p>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="finalizar()">
+    <div formArrayName="salud" *ngFor="let integrante of salud.controls; let i = index" [formGroupName]="i"
+        class="fila">
+        <input formControlName="parentesco" placeholder="Parentesco" />
+        <select formControlName="problema">
+            <option *ngFor="let p of opcionesProblemas" [value]="p">{{ p }}</option>
+        </select>
+        <select formControlName="ayuda">
+            <option *ngFor="let a of opcionesAyuda" [value]="a">{{ a }}</option>
+        </select>
+        <button type="button" (click)="eliminarIntegrante(i)">🗑</button>
+    </div>
+
+    <button type="button" (click)="agregarIntegrante()">➕ Añadir Integrante</button>
+
+    <div class="info-secundaria">
+        <h4>Situaciones particulares del grupo familiar</h4>
+        <label><input type="checkbox" formControlName="universidadPrivada"> Hermanos que estudien en universidades
+            privadas</label>
+        <label><input type="checkbox" formControlName="fallecimientoPadres"> Fallecimiento de los padres o tutores desde
+            2018 a la fecha</label>
+        <label><input type="checkbox" formControlName="otrasDificultades"> Otras dificultades que interfieran en su
+            proyecto de estudio</label>
+    </div>
+
+    <div class="navegacion">
+        <button type="button" (click)="emitirVolverAtras()">⬅ Atrás</button>
+        <button type="button" (click)="emitirFinalizar()">Finalizar</button>
+
+    </div>
+</form>
