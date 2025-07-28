@@ -17,26 +17,18 @@ export class DatoSaludComponent {
   opcionesProblemas = ['Ninguna', 'Enfermedad crónica', 'Discapacidad', 'Otro'];
   opcionesAyuda = ['Sí', 'No'];
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      salud: this.fb.array([
-        this.fb.group({
-          parentesco: ['Postulante'],
-          problema: ['Ninguna'],
-          ayuda: ['Sí']
-        })
-      ]),
-      situaciones: this.fb.group({
-        universidadPrivada: [false],
-        fallecimientoPadres: [false],
-        otrasDificultades: [false]
-      })
-    });
-  }
+  constructor(private fb: FormBuilder) { }
+
 
   get salud(): FormArray {
     return this.form.get('salud') as FormArray;
   }
+
+  get situacionesForm(): FormGroup | null {
+    const grupo = this.form.get('situaciones');
+    return grupo instanceof FormGroup ? grupo : null;
+  }
+
 
   agregarIntegrante() {
     this.salud.push(this.fb.group({

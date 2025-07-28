@@ -138,12 +138,10 @@ export class TipoServicioComponent {
   }
 
   avanzarDatosSalud(datos: any) {
-    this.datosSaludForm.patchValue(datos);
+    this.socioeconomicoForm.patchValue(datos);
     this.etapaFormulario = 4;
-    console.log('Datos de salud recibidos:', datos);
+    console.log('Datos socioeconómicos recibidos:', datos);
   }
-
-
 
   enviarFormularioFinal(datos: any) {
     this.socioeconomicoForm.patchValue(datos);

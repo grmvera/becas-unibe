@@ -29,13 +29,14 @@
 
   <!-- Etapa 3: Datos socioeconómicos -->
   <app-datos-socioeconomico *ngIf="etapaFormulario === 3" [form]="socioeconomicoForm"
-    (volverAtras)="etapaFormulario = 2" (avanzarDatosSalud)="avanzarDatosSalud($event)">
+    (volverAtras)="etapaFormulario = 2" (avanzarSalud)="avanzarDatosSalud($event)">
   </app-datos-socioeconomico>
 
   <!-- Etapa 4: Datos de salud -->
   <app-dato-salud *ngIf="etapaFormulario === 4" [form]="datosSaludForm" (volverAtras)="etapaFormulario = 3"
     (finalizar)="enviarFormularioFinal($event)">
   </app-dato-salud>
+
 
 
 </div>
