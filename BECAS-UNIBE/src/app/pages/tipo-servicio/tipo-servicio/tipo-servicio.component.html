@@ -34,9 +34,12 @@
 
   <!-- Etapa 4: Datos de salud -->
   <app-dato-salud *ngIf="etapaFormulario === 4" [form]="datosSaludForm" (volverAtras)="etapaFormulario = 3"
-    (finalizar)="enviarFormularioFinal($event)">
+    (avanzarDiscapacidad)="avanzarDatosDiscapacidad($event)">
   </app-dato-salud>
 
-
+  <!-- Etapa 5: Datos de discapacidad -->
+  <app-dato-discapacidad *ngIf="etapaFormulario === 5" [form]="datosDiscapacidadForm" (volverAtras)="etapaFormulario = 4"
+    (finalizar)="enviarFormularioFinal($event)">
+  </app-dato-discapacidad>
 
 </div>

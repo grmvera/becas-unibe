@@ -5,6 +5,7 @@ import { DatosGrupoFamiliarComponent } from '../../../postulacion-formulario/dat
 import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-personales/datos-personales.component';
 import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/dato-socioeconomicos/dato-socioeconomicos.component';
 import { DatoSaludComponent } from '../../../postulacion-formulario/dato-salud/dato-salud.component';
+import { DatoDiscapacidadComponent } from '../../../postulacion-formulario/dato-discapacidad/dato-discapacidad.component';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -16,7 +17,8 @@ import { DatoSaludComponent } from '../../../postulacion-formulario/dato-salud/d
     DatosPersonalesComponent,
     DatosGrupoFamiliarComponent,
     DatosSocioeconomicoComponent,
-    DatoSaludComponent
+    DatoSaludComponent,
+    DatoDiscapacidadComponent,
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -48,6 +50,7 @@ export class TipoServicioComponent {
   grupoFamiliarForm: FormGroup;
   socioeconomicoForm: FormGroup;
   datosSaludForm: FormGroup;
+  datosDiscapacidadForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.datosPersonalesForm = this.fb.group({
@@ -110,8 +113,20 @@ export class TipoServicioComponent {
         fallecimientoPadres: [false],
         otrasDificultades: [false]
       }),
-      justificacion: [''] 
+      justificacion: ['']
     });
+
+    this.datosDiscapacidadForm = this.fb.group({
+      tipoDiscapacidad: [''],
+      grado: [0],
+      causa: [''],
+      rol: ['Estudiante'],
+      lugarTrabajo: [''],
+      educativas: [''],
+      sociales: [''],
+      descripcion: ['']
+    });
+
 
   }
 
@@ -144,13 +159,20 @@ export class TipoServicioComponent {
     console.log('Datos socioeconómicos recibidos:', datos);
   }
 
+  avanzarDatosDiscapacidad(datos: any) {
+    this.datosSaludForm.patchValue(datos);
+    this.etapaFormulario = 5;
+    console.log('Datos de salud recibidos:', datos);
+  }
+
   enviarFormularioFinal(datos: any) {
     this.socioeconomicoForm.patchValue(datos);
     console.log('Formulario completo:', {
       datosPersonales: this.datosPersonalesForm.value,
       grupoFamiliar: this.grupoFamiliarForm.value,
       datosSocioeconomicos: this.socioeconomicoForm.value,
-      datosSalud: this.datosSaludForm.value
+      datosSalud: this.datosSaludForm.value,
+      datosDiscapacidad: this.datosDiscapacidadForm.value
     });
 
   }

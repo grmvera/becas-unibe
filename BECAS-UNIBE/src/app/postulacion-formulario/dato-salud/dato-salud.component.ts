@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class DatoSaludComponent {
   @Input() form!: FormGroup;
   @Output() volverAtras = new EventEmitter<void>();
-  @Output() finalizar = new EventEmitter<any>();
+  @Output() avanzarDiscapacidad = new EventEmitter<any>();
 
   opcionesProblemas = ['Ninguna', 'Enfermedad crónica', 'Discapacidad', 'Otro'];
   opcionesAyuda = ['Sí', 'No'];
@@ -49,6 +49,6 @@ export class DatoSaludComponent {
 
   emitirFinalizar() {
     console.log('Datos de salud:', this.form.value);
-    this.finalizar.emit(this.form.value);
+    this.avanzarDiscapacidad.emit(this.form.value);
   }
 }

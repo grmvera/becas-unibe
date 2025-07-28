@@ -1,0 +1,50 @@
+.box-discapacidad {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  margin-bottom: 1.5rem;
+}
+
+.fila-discapacidad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.fila-discapacidad label {
+  font-weight: bold;
+}
+
+.fila-discapacidad textarea {
+  resize: vertical;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.btn-atras,
+.btn-siguiente {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-atras {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-siguiente {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
