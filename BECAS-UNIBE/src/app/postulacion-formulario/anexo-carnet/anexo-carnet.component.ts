@@ -2,11 +2,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-anexo-carnet',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule],
   templateUrl: './anexo-carnet.component.html',
   styleUrls: ['./anexo-carnet.component.css']
 })
@@ -17,13 +19,15 @@ export class AnexoCarnetComponent {
 
   archivos: { conadis?: File; requisitos?: File } = {};
 
+  constructor(private snackBar: MatSnackBar, private router: Router) {}
+
   onArchivoSeleccionado(event: any, tipo: 'conadis' | 'requisitos') {
     const archivo = event.target.files[0];
     if (archivo) this.archivos[tipo] = archivo;
   }
 
   async subirArchivo() {
-    const confirmacion = confirm('¿Está seguro de subir estos archivos? Esta acción no se podrá editar.');
+    const confirmacion = confirm('¿Está seguro de haber completado el formulario completo y subir estos archivos? Esta acción no se podrá editar.');
     if (!confirmacion) return;
 
     const storage = getStorage();
@@ -44,11 +48,17 @@ export class AnexoCarnetComponent {
       }
 
       this.form.patchValue(urls);
-      alert('Archivos subidos con éxito.');
+      this.snackBar.open('✅ Archivos subidos correctamente', 'Cerrar', { duration: 4000, panelClass: ['snackbar-success'] });
+
+      // Espera un momento antes de redirigir
+      setTimeout(() => {
+        this.router.navigate(['/dashboard']);
+      }, 1500);
+
       this.emitirFinalizar();
     } catch (error) {
       console.error('Error al subir archivos:', error);
-      alert('Hubo un error al subir los archivos.');
+      this.snackBar.open('❌ Error al subir los archivos', 'Cerrar', { duration: 5000, panelClass: ['snackbar-error'] });
     }
   }
 
@@ -61,6 +71,7 @@ export class AnexoCarnetComponent {
   }
 
   emitirFinalizar() {
+    console.log('Datos para enviar', this.form.value);
     this.finalizar.emit(this.form.value);
   }
 }

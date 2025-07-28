@@ -7,6 +7,11 @@ import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/da
 import { DatoSaludComponent } from '../../../postulacion-formulario/dato-salud/dato-salud.component';
 import { DatoDiscapacidadComponent } from '../../../postulacion-formulario/dato-discapacidad/dato-discapacidad.component';
 import { AnexoCarnetComponent } from '../../../postulacion-formulario/anexo-carnet/anexo-carnet.component';
+import { Auth } from '@angular/fire/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { PostulacionService } from '../../../shared/services/postulacion.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -21,6 +26,7 @@ import { AnexoCarnetComponent } from '../../../postulacion-formulario/anexo-carn
     DatoSaludComponent,
     DatoDiscapacidadComponent,
     AnexoCarnetComponent,
+    MatSnackBarModule
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -55,8 +61,14 @@ export class TipoServicioComponent {
   datosDiscapacidadForm: FormGroup;
   anexoCarnetForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  enviandoFormulario = false;
+
+  constructor(private fb: FormBuilder,
+    private auth: Auth,
+    private postulacionService: PostulacionService,
+    private snackBar: MatSnackBar) {
     this.datosPersonalesForm = this.fb.group({
+      uid: [''],
       tipoServicio: [''],
       tipoBeca: [''],
       imagen: [null],
@@ -72,6 +84,15 @@ export class TipoServicioComponent {
         piso: [''],
         sector: ['']
       })
+    });
+
+    // Obtiene el usuario actual UID
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.datosPersonalesForm.get('uid')?.setValue(user.uid);
+      } else {
+        console.warn('Usuario no autenticado.');
+      }
     });
 
     this.grupoFamiliarForm = this.fb.group({
@@ -134,7 +155,6 @@ export class TipoServicioComponent {
       urlConadis: [''],
       urlRequisitos: ['']
     });
-
   }
 
   seleccionarServicio(servicio: string) {
@@ -179,15 +199,40 @@ export class TipoServicioComponent {
   }
 
   enviarFormularioFinal(datos: any) {
+    if (this.enviandoFormulario) return;
+
     this.socioeconomicoForm.patchValue(datos);
-    console.log('Formulario completo:', {
+
+    const formularioCompleto = {
       datosPersonales: this.datosPersonalesForm.value,
       grupoFamiliar: this.grupoFamiliarForm.value,
       datosSocioeconomicos: this.socioeconomicoForm.value,
       datosSalud: this.datosSaludForm.value,
       datosDiscapacidad: this.datosDiscapacidadForm.value,
-      anexoCarnet: this.anexoCarnetForm.value
-    });
+      anexoCarnet: this.anexoCarnetForm.value,
+      fechaEnvio: new Date()
+    };
+
+    this.enviandoFormulario = true;
+
+    this.postulacionService.guardarPostulacion(formularioCompleto)
+      .then(() => {
+        console.log('✅ Formulario guardado exitosamente en Firestore');
+        this.snackBar.open('Formulario enviado correctamente ✅', 'Cerrar', {
+          duration: 5000,
+          panelClass: ['snackbar-success']
+        });
+      })
+      .catch(error => {
+        console.error('❌ Error al guardar formulario:', error);
+        this.snackBar.open('Error al enviar el formulario ❌', 'Cerrar', {
+          duration: 6000,
+          panelClass: ['snackbar-error']
+        });
+      })
+      .finally(() => {
+        this.enviandoFormulario = false;
+      });
   }
 
   regresarADatosPersonales() {
