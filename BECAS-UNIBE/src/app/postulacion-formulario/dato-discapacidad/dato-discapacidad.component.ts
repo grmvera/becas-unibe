@@ -12,13 +12,14 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class DatoDiscapacidadComponent {
   @Input() form!: FormGroup;
   @Output() volverAtras = new EventEmitter<void>();
-  @Output() finalizar = new EventEmitter<any>();
+  @Output() avanzarAnexoCarnet = new EventEmitter<any>();
 
   emitirVolverAtras() {
     this.volverAtras.emit();
   }
 
   emitirFinalizar() {
-    this.finalizar.emit(this.form.value);
+    console.log('Datos de Discapacidad:', this.form.value);
+    this.avanzarAnexoCarnet.emit(this.form.value);
   }
 }

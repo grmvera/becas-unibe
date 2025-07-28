@@ -39,7 +39,12 @@
 
   <!-- Etapa 5: Datos de discapacidad -->
   <app-dato-discapacidad *ngIf="etapaFormulario === 5" [form]="datosDiscapacidadForm" (volverAtras)="etapaFormulario = 4"
-    (finalizar)="enviarFormularioFinal($event)">
+    (avanzarAnexoCarnet)="avanzarDatosAnexoCarnet($event)">
   </app-dato-discapacidad>
+
+  <!-- Etapa 6: Anexo Carnet -->
+  <app-anexo-carnet *ngIf="etapaFormulario === 6" [form]="anexoCarnetForm" (volverAtras)="etapaFormulario = 5"
+    (finalizar)="enviarFormularioFinal($event)">
+  </app-anexo-carnet>
 
 </div>

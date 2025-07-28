@@ -6,6 +6,7 @@ import { DatosPersonalesComponent } from '../../../postulacion-formulario/datos-
 import { DatosSocioeconomicoComponent } from '../../../postulacion-formulario/dato-socioeconomicos/dato-socioeconomicos.component';
 import { DatoSaludComponent } from '../../../postulacion-formulario/dato-salud/dato-salud.component';
 import { DatoDiscapacidadComponent } from '../../../postulacion-formulario/dato-discapacidad/dato-discapacidad.component';
+import { AnexoCarnetComponent } from '../../../postulacion-formulario/anexo-carnet/anexo-carnet.component';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -19,6 +20,7 @@ import { DatoDiscapacidadComponent } from '../../../postulacion-formulario/dato-
     DatosSocioeconomicoComponent,
     DatoSaludComponent,
     DatoDiscapacidadComponent,
+    AnexoCarnetComponent,
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -51,6 +53,7 @@ export class TipoServicioComponent {
   socioeconomicoForm: FormGroup;
   datosSaludForm: FormGroup;
   datosDiscapacidadForm: FormGroup;
+  anexoCarnetForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.datosPersonalesForm = this.fb.group({
@@ -127,6 +130,10 @@ export class TipoServicioComponent {
       descripcion: ['']
     });
 
+    this.anexoCarnetForm = this.fb.group({
+      urlConadis: [''],
+      urlRequisitos: ['']
+    });
 
   }
 
@@ -165,6 +172,12 @@ export class TipoServicioComponent {
     console.log('Datos de salud recibidos:', datos);
   }
 
+  avanzarDatosAnexoCarnet(datos: any) {
+    this.anexoCarnetForm.patchValue(datos);
+    this.etapaFormulario = 6;
+    console.log('Datos de anexo carnet recibidos:', datos);
+  }
+
   enviarFormularioFinal(datos: any) {
     this.socioeconomicoForm.patchValue(datos);
     console.log('Formulario completo:', {
@@ -172,9 +185,9 @@ export class TipoServicioComponent {
       grupoFamiliar: this.grupoFamiliarForm.value,
       datosSocioeconomicos: this.socioeconomicoForm.value,
       datosSalud: this.datosSaludForm.value,
-      datosDiscapacidad: this.datosDiscapacidadForm.value
+      datosDiscapacidad: this.datosDiscapacidadForm.value,
+      anexoCarnet: this.anexoCarnetForm.value
     });
-
   }
 
   regresarADatosPersonales() {

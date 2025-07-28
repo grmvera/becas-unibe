@@ -1,0 +1,94 @@
+.box-discapacidad {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h3 {
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.descripcion {
+  font-size: 0.95rem;
+  background: #f4f4f4;
+  padding: 1rem;
+  border-left: 4px solid #003366;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.lista-requisitos {
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.fila-discapacidad {
+  margin: 1rem 0;
+}
+
+.fila-discapacidad input[type="file"] {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.botones {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+/* Ya tenías estos estilos definidos: */
+
+.btn-seleccionar {
+  background-color: #003366;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #c62828;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-atras,
+.btn-siguiente {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-atras {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-siguiente {
+  background-color: #28a745;
+  color: #fff;
+}
