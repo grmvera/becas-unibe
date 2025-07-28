@@ -1,0 +1,63 @@
+<h3>Datos del grupo familiar</h3>
+
+<form [formGroup]="form" (ngSubmit)="siguiente()">
+    <div class="tipo-vivienda-con-info">
+        <div class="tipo-vivienda-select">
+            <label>TIPO DE VIVIENDA</label>
+            <select formControlName="tipoVivienda">
+                <option value="">Seleccione</option>
+                <option value="propia">Propia</option>
+                <option value="alquilada">Alquilada</option>
+                <option value="prestada">Prestada</option>
+            </select>
+        </div>
+
+        <div class="info-box">
+            <ul>
+                <li>Si el solicitante alquila con otras personas, deberá consignar el monto que le corresponde pagar
+                    (adjuntar nota especificando con cuántas personas comparte la vivienda y cómo se distribuyen los
+                    gastos).</li>
+                <li><strong>Solo se llenan los datos del solicitante cuando este no vive con su grupo familiar.</strong>
+                </li>
+                <li>Adjuntar copias del pago de servicios básicos de los últimos dos meses antes de la fecha de
+                    postulación. <strong>(Estos documentos, SÍ APLICAN A BECA SOCIO-ECONÓMICA; para otros tipos de beca,
+                        debe solamente llenar la información)</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <h4>GASTOS MENSUALES</h4>
+    <div class="gastos-grid" formGroupName="gastos">
+        <div *ngFor="let categoria of categorias">
+            <label>{{ categoria }}</label>
+            <input type="number" [formControlName]="categoria" />
+        </div>
+    </div>
+
+    <p><strong>TOTAL: </strong>$ {{ calcularTotal() }}</p>
+
+    <label>Nota (si es necesario):</label>
+    <input type="text" formControlName="nota" />
+
+    <h4>VEHÍCULOS</h4>
+    <div formArrayName="vehiculos">
+        <div *ngFor="let v of vehiculos.controls; let i = index" [formGroupName]="i" class="vehiculo-grupo">
+            <select formControlName="tipo">
+                <option>Automóvil</option>
+                <option>Motocicleta</option>
+            </select>
+            <input placeholder="Marca" formControlName="marca" type="text" />
+            <input placeholder="Modelo" formControlName="modelo" type="text" />
+            <input placeholder="Año" formControlName="anio" type="number" />
+            <button type="button" (click)="eliminarVehiculo(i)">🗑️</button>
+        </div>
+    </div>
+    <button type="button" (click)="agregarVehiculo()">➕ Añadir Vehículo</button>
+
+
+    <div class="navegacion">
+        <button type="button" (click)="regresar()">⬅ Atrás</button>
+        <button type="submit">Siguiente</button>
+    </div>
+</form>

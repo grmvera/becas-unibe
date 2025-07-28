@@ -23,6 +23,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'tipo-servicio',
+        loadComponent: () =>
+          import('./pages/tipo-servicio/tipo-servicio/tipo-servicio.component').then(
+            (m) => m.TipoServicioComponent
+          ),
+        data: { roles: ['student'] }
+      },
+      {
         path: 'usuarios',
         loadComponent: () =>
           import('./pages/usuarios/usuarios.component').then(

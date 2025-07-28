@@ -1,0 +1,50 @@
+<div class="contenedor">
+  <h2>Tipo de servicio</h2>
+
+  <div class="menu-servicios">
+    <div *ngFor="let servicio of tiposServicios" class="opcion"
+      [ngClass]="{ 'activo': servicioSeleccionado === servicio }" (click)="seleccionarServicio(servicio)">
+      {{ servicio }}
+    </div>
+  </div>
+
+  <div *ngIf="servicioSeleccionado === 'TIPOS DE BECAS'" class="subopciones">
+    <div class="subopcion" *ngFor="let beca of becas" (click)="seleccionarBeca(beca)">
+      {{ beca }}
+    </div>
+  </div>
+
+  <!-- Etapa 1: Datos personales -->
+  <app-datos-personales
+    *ngIf="etapaFormulario === 1 && (servicioSeleccionado && (servicioSeleccionado !== 'TIPOS DE BECAS' || becaSeleccionada))"
+    [tipoBeca]="becaSeleccionada || ''" [tipoServicio]="servicioSeleccionado || ''" [form]="datosPersonalesForm"
+    (pasoCompletado)="avanzarGrupoFamiliar($event)">
+  </app-datos-personales>
+
+  <!-- Etapa 2: Grupo familiar -->
+  <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [form]="grupoFamiliarForm"
+    [datosPersonales]="datosPersonalesForm.value" (volverAtras)="regresarADatosPersonales()"
+    (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event)">
+  </app-datos-grupo-familiar>
+
+  <!-- Etapa 3: Datos socioeconómicos -->
+  <app-datos-socioeconomico *ngIf="etapaFormulario === 3" [form]="socioeconomicoForm"
+    (volverAtras)="etapaFormulario = 2" (avanzarSalud)="avanzarDatosSalud($event)">
+  </app-datos-socioeconomico>
+
+  <!-- Etapa 4: Datos de salud -->
+  <app-dato-salud *ngIf="etapaFormulario === 4" [form]="datosSaludForm" (volverAtras)="etapaFormulario = 3"
+    (avanzarDiscapacidad)="avanzarDatosDiscapacidad($event)">
+  </app-dato-salud>
+
+  <!-- Etapa 5: Datos de discapacidad -->
+  <app-dato-discapacidad *ngIf="etapaFormulario === 5" [form]="datosDiscapacidadForm" (volverAtras)="etapaFormulario = 4"
+    (avanzarAnexoCarnet)="avanzarDatosAnexoCarnet($event)">
+  </app-dato-discapacidad>
+
+  <!-- Etapa 6: Anexo Carnet -->
+  <app-anexo-carnet *ngIf="etapaFormulario === 6" [form]="anexoCarnetForm" (volverAtras)="etapaFormulario = 5"
+    (finalizar)="enviarFormularioFinal($event)">
+  </app-anexo-carnet>
+
+</div>

@@ -18,7 +18,8 @@
 
       <!-- Solo para estudiante -->
       <ng-container *ngIf="usuario?.rol === 'student'">
-        <button (click)="navegar('/postulacion')">🎓 Postulación de Becas</button>
+        <button (click)="navegar('/tipo-servicio')">🎓 Postulacion a Servicio</button>
+        <button (click)="navegar('/tipo-servicio')">🎓 Revisión de Solicitud</button>
       </ng-container>
     </div>
   </div>

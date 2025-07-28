@@ -1,0 +1,68 @@
+<h3>Datos de salud</h3>
+
+<div class="info-box-salud">
+  <p>
+    Presentar certificados médicos actualizados, si se considera problemas de salud de uno de los integrantes o el
+    estudiante.
+    <strong>(SI APLICA A BECA SOCIO – ECONÓMICA)</strong>, caso contrario, solamente llene el apartado; de presentar
+    la dificultad en el núcleo familiar.
+  </p>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="emitirFinalizar()">
+  <table class="tabla-salud">
+    <thead>
+      <tr>
+        <th>Parentesco</th>
+        <th>Problemas de salud del grupo familiar</th>
+        <th>¿Reciben ayuda gubernamental o medicina pagada?</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody formArrayName="salud">
+      <tr *ngFor="let integrante of salud.controls; let i = index" [formGroupName]="i">
+        <td><input formControlName="parentesco" placeholder="Parentesco" /></td>
+        <td>
+          <select formControlName="problema">
+            <option *ngFor="let p of opcionesProblemas" [value]="p">{{ p }}</option>
+          </select>
+        </td>
+        <td>
+          <select formControlName="ayuda">
+            <option *ngFor="let a of opcionesAyuda" [value]="a">{{ a }}</option>
+          </select>
+        </td>
+        <td>
+          <button type="button" (click)="eliminarIntegrante(i)">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button type="button" (click)="agregarIntegrante()">➕ Añadir Integrante</button>
+
+  <!-- VALIDACIÓN SEGURA de situaciones -->
+  <div class="info-secundaria" *ngIf="situacionesForm" [formGroup]="situacionesForm">
+    <h4>Situaciones particulares del grupo familiar</h4>
+    <p>¿Actualmente, en su grupo familiar conviviente, se da alguna de las siguientes situaciones?</p>
+    <label><input type="checkbox" formControlName="universidadPrivada" /> Hermanos que estudien en universidades
+      privadas</label><br />
+    <label><input type="checkbox" formControlName="fallecimientoPadres" /> Fallecimiento de los padres o tutores
+      desde 2018 a la fecha</label><br />
+    <label><input type="checkbox" formControlName="otrasDificultades" /> Otras dificultades que interfieran en su
+      proyecto de estudio</label>
+  </div>
+
+  <div class="justificacion-box" [formGroup]="form">
+    <h4>SITUACIÓN ACTUAL DEL ESTUDIANTE</h4>
+    <p><strong>Justifique aquí aspectos de solicitud de beca (mencione sus dificultades, fortalezas y
+        compromisos).</strong></p>
+    <textarea formControlName="justificacion" class="justificacion-textarea" rows="5"></textarea>
+  </div>
+
+
+  <div class="navegacion">
+    <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>
+    <button type="submit" class="btn-siguiente">Siguiente</button>
+  </div>
+</form>

@@ -1,0 +1,75 @@
+<h3>Formulario de discapacidad</h3>
+
+<form [formGroup]="form" (ngSubmit)="emitirFinalizar()">
+    <div class="box-discapacidad">
+        <div class="fila-discapacidad">
+            <label>Tipo de discapacidad:</label>
+            <select formControlName="tipoDiscapacidad">
+                <option value="Visual">Visual</option>
+                <option value="Lenguaje">Lenguaje</option>
+                <option value="Auditiva">Auditiva</option>
+                <option value="Intelectual">Intelectual</option>
+                <option value="Mental / Psicológica">Mental / Psicológica</option>
+                <option value="Física">Física</option>
+            </select>
+
+            <label>Grado de discapacidad (%):</label>
+            <input type="number" formControlName="grado" min="0" max="100">
+        </div>
+
+        <div class="fila-discapacidad">
+            <label>Causa de la discapacidad:</label>
+            <select formControlName="causa">
+                <option value="Congénito / Genético">Congénito / Genético</option>
+                <option value="Accidente de tránsito">Accidente de tránsito</option>
+                <option value="Enfermedad adquirida">Enfermedad adquirida</option>
+                <option value="Accidente de trabajo">Accidente de trabajo</option>
+                <option value="Problemas de parto">Problemas de parto</option>
+                <option value="Violencia">Violencia</option>
+                <option value="Trastornos nutricionales">Trastornos nutricionales</option>
+                <option value="Desastres naturales / guerra">Desastres naturales / guerra</option>
+            </select>
+        </div>
+
+        <div class="fila-discapacidad">
+            <label>Ocupación / Rol actual:</label>
+            <select formControlName="rol">
+                <option value="Estudiante">Estudiante</option>
+                <option value="PDI">Personal Docente e Investigador (PDI)</option>
+                <option value="PAS">Personal Administrativo y de Servicios (PAS)</option>
+            </select>
+
+            <label>Lugar de trabajo (si aplica):</label>
+            <input type="text" formControlName="lugarTrabajo">
+        </div>
+    </div>
+
+    <div class="box-discapacidad">
+        <div class="fila-discapacidad">
+            <label>Fortalezas, debilidades educativas</label>
+            <small>Escriba en pocas palabras una evaluación de su trayectoria educativa y/o de trabajo en la UNIBE
+                durante el semestre</small>
+            <textarea formControlName="educativas" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="fila-discapacidad">
+            <label>Fortalezas, debilidades sociales</label>
+            <small>Escriba en pocas palabras una evaluación de su relación con docentes y compañeros de la UNIBE durante
+                el semestre</small>
+            <textarea formControlName="sociales" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="fila-discapacidad">
+            <label>Descripción</label>
+            <small>Escriba brevemente las necesidades de apoyo/asesoramiento, así como las ayudas técnicas que requiere
+                para el desarrollo de sus estudios/puesto de trabajo. Ayudas psicológicas</small>
+            <textarea formControlName="descripcion" rows="3" class="form-control"></textarea>
+        </div>
+    </div>
+
+
+    <div class="navegacion">
+        <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>
+        <button type="submit" class="btn-siguiente">Siguiente</button>
+    </div>
+</form>

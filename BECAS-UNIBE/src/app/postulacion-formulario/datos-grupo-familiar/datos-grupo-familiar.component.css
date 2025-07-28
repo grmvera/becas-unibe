@@ -1,0 +1,97 @@
+form {
+  max-width: 850px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+h3, h4 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.gastos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.vehiculo-grupo {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 6px 14px;
+  border: none;
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button[type="button"] {
+  background-color: #6c757d;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.tipo-vivienda-con-info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 1.5rem;
+}
+
+.tipo-vivienda-select {
+  flex: 1;
+}
+
+.info-box {
+  flex: 2;
+  background-color: #e9ecef;
+  padding: 1rem;
+  border-left: 4px solid #0d6efd;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.info-box ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.info-box li {
+  margin-bottom: 0.6rem;
+}
