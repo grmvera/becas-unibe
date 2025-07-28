@@ -109,7 +109,8 @@ export class TipoServicioComponent {
         universidadPrivada: [false],
         fallecimientoPadres: [false],
         otrasDificultades: [false]
-      })
+      }),
+      justificacion: [''] 
     });
 
   }
