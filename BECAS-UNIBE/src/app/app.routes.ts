@@ -70,6 +70,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] }
       },
+      {
+        path: 'list-solicitudes',
+        loadComponent: () =>
+          import('./pages/lista-solicitud/lista-solicitud.component').then(
+            (m) => m.ListaSolicitudComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 
