@@ -210,7 +210,9 @@ export class TipoServicioComponent {
       datosSalud: this.datosSaludForm.value,
       datosDiscapacidad: this.datosDiscapacidadForm.value,
       anexoCarnet: this.anexoCarnetForm.value,
-      fechaEnvio: new Date()
+      fechaEnvio: new Date(),
+      estadoSoliticitud: true,
+      estadoAprobacion: null
     };
 
     this.enviandoFormulario = true;

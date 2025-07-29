@@ -31,6 +31,14 @@ export const routes: Routes = [
         data: { roles: ['student'] }
       },
       {
+        path: 'revision-solicitud',
+        loadComponent: () =>
+          import('./pages/revision-solicitud/revision-solicitud.component').then(
+            (m) => m.RevisionSolicitudComponent
+          ),
+        data: { roles: ['student'] }
+      },
+      {
         path: 'usuarios',
         loadComponent: () =>
           import('./pages/usuarios/usuarios.component').then(
@@ -67,6 +75,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/info-publica/info-publica.component').then(
             (m) => m.InfoPublicaComponent
+          ),
+        data: { roles: ['admin'] }
+      },
+      {
+        path: 'list-solicitudes',
+        loadComponent: () =>
+          import('./pages/lista-solicitud/lista-solicitud.component').then(
+            (m) => m.ListaSolicitudComponent
           ),
         data: { roles: ['admin'] }
       },

@@ -1,0 +1,31 @@
+<h2 class="titulo-lista">Revision de Estados de Postulaciones</h2>
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Cédula</th>
+      <th>Tipo de Beca</th>
+      <th>Tipo de Servicio</th>
+      <th>Fecha de Solicitud</th>
+      <th>Estado de la Solicitud</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of postulacionesData">
+      <td>{{ p.cedulaUsuario }}</td>
+      <td>{{ p.tipoBeca }}</td>
+      <td>{{ p.tipoServicio }}</td>
+      <td>{{ p.fechaSolicitud }}</td>
+      <td [ngClass]="{
+        'aprobado': p.estadoAprobacion === true,
+        'rechazado': p.estadoAprobacion === false,
+        'sin-revisar': p.estadoAprobacion === null || p.estadoAprobacion === undefined
+      }">
+        {{ p.estadoAprobacion === true ? 'Aprobado' :
+           p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
+      </td>
+      <td><button class="action-btn">Ver</button></td>
+    </tr>
+  </tbody>
+</table>
