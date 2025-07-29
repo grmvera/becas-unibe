@@ -47,9 +47,31 @@
     </p>
     <p><strong>ID de reunión:</strong> {{ periodoActivo.idZoom }}</p>
   </div>
-
 </div>
 
-<div *ngIf="!periodoActivo && usuarioRol === 'student'" class="sin-periodo">
+<div *ngIf="periodoActivo && usuarioRol === 'admin'" class="admin-dashboard">
+  <h2 class="titulo">Periodo Activo: {{ periodoActivo.nombrePeriodo }}</h2>
+
+  <div class="total-postulaciones">
+    <h3>Postulaciones recibidas</h3>
+    <p class="numero-total">{{ postulacionesTotales }}</p>
+  </div>
+
+  <div class="graficos">
+    <div class="grafico">
+      <canvas baseChart [data]="chartDataBecas" [type]="'doughnut'"></canvas>
+    </div>
+
+    <div class="grafico">
+      <canvas baseChart [data]="chartDataAyudas" [type]="'doughnut'"></canvas>
+    </div>
+
+    <div class="grafico">
+      <canvas baseChart [data]="chartDataGuarderia" [type]="'doughnut'"></canvas>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!periodoActivo && (usuarioRol === 'student' || usuarioRol === 'admin')" class="sin-periodo">
   <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
 </div>
