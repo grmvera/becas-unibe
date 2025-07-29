@@ -31,6 +31,14 @@ export const routes: Routes = [
         data: { roles: ['student'] }
       },
       {
+        path: 'revision-solicitud',
+        loadComponent: () =>
+          import('./pages/revision-solicitud/revision-solicitud.component').then(
+            (m) => m.RevisionSolicitudComponent
+          ),
+        data: { roles: ['student'] }
+      },
+      {
         path: 'usuarios',
         loadComponent: () =>
           import('./pages/usuarios/usuarios.component').then(
