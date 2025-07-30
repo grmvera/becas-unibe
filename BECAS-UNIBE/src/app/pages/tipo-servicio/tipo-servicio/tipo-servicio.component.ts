@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosGrupoFamiliarComponent } from '../../../postulacion-formulario/datos-grupo-familiar/datos-grupo-familiar.component';
@@ -11,6 +11,7 @@ import { Auth } from '@angular/fire/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { PostulacionService } from '../../../shared/services/postulacion.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
 
 
 @Component({
@@ -54,6 +55,9 @@ export class TipoServicioComponent {
   becaSeleccionada: string | null = null;
   etapaFormulario = 1;
 
+
+
+  private firestore = inject(Firestore);
   datosPersonalesForm: FormGroup;
   grupoFamiliarForm: FormGroup;
   socioeconomicoForm: FormGroup;
@@ -62,6 +66,31 @@ export class TipoServicioComponent {
   anexoCarnetForm: FormGroup;
 
   enviandoFormulario = false;
+
+  periodoActivo: any = null;
+  periodoId: string = ''; // ✅ Ahora sí existirá
+
+  async ngOnInit() {
+    const periodosRef = collection(this.firestore, 'periodos');
+    const q = query(periodosRef, where('estado', '==', true));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      const docRef = snapshot.docs[0];
+      const data = docRef.data();
+
+      this.periodoId = docRef.id;
+
+      const detallesRef = doc(this.firestore, `periodos/${docRef.id}/informacionPublica/detalles`);
+      const detallesSnap = await getDoc(detallesRef);
+
+      this.periodoActivo = detallesSnap.exists()
+        ? { ...data, ...detallesSnap.data() }
+        : data;
+    }
+
+
+  }
 
   constructor(private fb: FormBuilder,
     private auth: Auth,
@@ -85,7 +114,6 @@ export class TipoServicioComponent {
         sector: ['']
       })
     });
-
     // Obtiene el usuario actual UID
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
@@ -212,7 +240,8 @@ export class TipoServicioComponent {
       anexoCarnet: this.anexoCarnetForm.value,
       fechaEnvio: new Date(),
       estadoSoliticitud: true,
-      estadoAprobacion: null
+      estadoAprobacion: null,
+      periodoId: this.periodoId
     };
 
     this.enviandoFormulario = true;
