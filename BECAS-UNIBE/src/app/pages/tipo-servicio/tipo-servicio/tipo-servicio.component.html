@@ -1,4 +1,4 @@
-<div class="contenedor">
+<div *ngIf="periodoActivo" class="contenedor"> 
   <h2>Tipo de servicio</h2>
 
   <div class="menu-servicios">
@@ -47,4 +47,8 @@
     (finalizar)="enviarFormularioFinal($event)">
   </app-anexo-carnet>
 
+</div>
+
+<div *ngIf="!periodoActivo" class="sin-periodo">
+  <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
 </div>
