@@ -1,12 +1,7 @@
 <h2 class="titulo-lista">Listado Completo de Postulaciones</h2>
 
 <div class="search-bar">
-  <input
-    type="text"
-    placeholder="Buscar por cédula..."
-    [(ngModel)]="busquedaCedula"
-    class="search-input"
-  />
+  <input type="text" placeholder="Buscar por cédula..." [(ngModel)]="busquedaCedula" class="search-input" />
 </div>
 
 <table class="styled-table">
@@ -14,8 +9,8 @@
     <tr>
       <th>Cédula</th>
       <th>Tipo de Beca</th>
-      <th>Tipo de Servicio</th>
       <th>Fecha de Solicitud</th>
+      <th>Tipo de Servicio</th>
       <th>Estado de la Solicitud</th>
       <th>Acciones</th>
     </tr>
@@ -23,8 +18,8 @@
   <tbody>
     <tr *ngFor="let p of (postulacionesFiltradas)">
       <td>{{ p.cedulaUsuario }}</td>
-      <td>{{ p.tipoBeca }}</td>
       <td>{{ p.tipoServicio }}</td>
+      <td>{{ p.tipoBeca }}</td>
       <td>{{ p.fechaSolicitud }}</td>
       <td [ngClass]="{
         'aprobado': p.estadoAprobacion === true,
@@ -32,7 +27,7 @@
         'sin-revisar': p.estadoAprobacion === null || p.estadoAprobacion === undefined
       }">
         {{ p.estadoAprobacion === true ? 'Aprobado' :
-           p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
+        p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
       </td>
       <td><button class="action-btn">Ver</button></td>
     </tr>
