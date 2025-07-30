@@ -68,7 +68,7 @@ export class TipoServicioComponent {
   enviandoFormulario = false;
 
   periodoActivo: any = null;
-  periodoId: string = ''; // ✅ Ahora sí existirá
+  periodoId: string = '';
 
   async ngOnInit() {
     const periodosRef = collection(this.firestore, 'periodos');
@@ -185,6 +185,10 @@ export class TipoServicioComponent {
     });
   }
 
+  get isBecaDiscapacidad(): boolean {
+    return this.becaSeleccionada === 'Beca Discapacidad';
+  }
+
   seleccionarServicio(servicio: string) {
     this.servicioSeleccionado = this.servicioSeleccionado === servicio ? null : servicio;
     this.becaSeleccionada = null;
@@ -199,31 +203,26 @@ export class TipoServicioComponent {
   avanzarGrupoFamiliar(datos: any) {
     this.datosPersonalesForm.patchValue(datos);
     this.etapaFormulario = 2;
-    console.log('Datos personales recibidos:', datos);
   }
 
   avanzarDatosSocioeconomico(datos: any) {
     this.grupoFamiliarForm.patchValue(datos);
     this.etapaFormulario = 3;
-    console.log('Grupo familiar recibido:', datos);
   }
 
   avanzarDatosSalud(datos: any) {
     this.socioeconomicoForm.patchValue(datos);
     this.etapaFormulario = 4;
-    console.log('Datos socioeconómicos recibidos:', datos);
   }
 
   avanzarDatosDiscapacidad(datos: any) {
     this.datosSaludForm.patchValue(datos);
-    this.etapaFormulario = 5;
-    console.log('Datos de salud recibidos:', datos);
+    this.etapaFormulario = this.isBecaDiscapacidad ? 5 : 6;
   }
 
   avanzarDatosAnexoCarnet(datos: any) {
     this.anexoCarnetForm.patchValue(datos);
     this.etapaFormulario = 6;
-    console.log('Datos de anexo carnet recibidos:', datos);
   }
 
   enviarFormularioFinal(datos: any) {
@@ -268,5 +267,8 @@ export class TipoServicioComponent {
 
   regresarADatosPersonales() {
     this.etapaFormulario = 1;
+  }
+  regresarADiscapacidad() { 
+    this.etapaFormulario = 4; 
   }
 }
