@@ -1,35 +1,50 @@
 <h2 class="titulo-lista">Listado Completo de Postulaciones</h2>
 
-<div class="search-bar">
-  <input type="text" placeholder="Buscar por cédula..." [(ngModel)]="busquedaCedula" class="search-input" />
-</div>
+<div class="filters">
+  <div>
+    <input id="cedula" type="text" [(ngModel)]="busquedaCedula" class="search-select" placeholder="Buscar por cédula" />
+  </div>
+  <div>
 
-<table class="styled-table">
-  <thead>
-    <tr>
-      <th>Cédula</th>
-      <th>Tipo de Beca</th>
-      <th>Fecha de Solicitud</th>
-      <th>Tipo de Servicio</th>
-      <th>Estado de la Solicitud</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let p of (postulacionesFiltradas)">
-      <td>{{ p.cedulaUsuario }}</td>
-      <td>{{ p.tipoServicio }}</td>
-      <td>{{ p.tipoBeca }}</td>
-      <td>{{ p.fechaSolicitud }}</td>
-      <td [ngClass]="{
+    <select id="periodo" [(ngModel)]="busquedaPeriodo" class="search-select">
+      <option value="Todos">Todos</option>
+      <option *ngFor="let periodo of periodos" [value]="periodo.nombrePeriodo">
+        {{ periodo.nombrePeriodo }}
+      </option>
+    </select>
+  </div>
+  <div>
+
+
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Cédula</th>
+          <th>Tipo de Beca</th>
+          <th>Fecha de Solicitud</th>
+          <th>Tipo de Servicio</th>
+          <th>Periodo</th>
+          <th>Estado de la Solicitud</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of (postulacionesFiltradas)">
+          <td>{{ p.cedulaUsuario }}</td>
+          <td>{{ p.tipoServicio }}</td>
+          <td>{{ p.tipoBeca }}</td>
+          <td>{{ p.fechaSolicitud }}</td>
+          <td>{{ p.periodo }}</td>
+          <td [ngClass]="{
         'aprobado': p.estadoAprobacion === true,
         'rechazado': p.estadoAprobacion === false,
         'sin-revisar': p.estadoAprobacion === null || p.estadoAprobacion === undefined
       }">
-        {{ p.estadoAprobacion === true ? 'Aprobado' :
-        p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
-      </td>
-      <td><button class="action-btn">Ver</button></td>
-    </tr>
-  </tbody>
-</table>
+            {{ p.estadoAprobacion === true ? 'Aprobado' :
+            p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
+          </td>
+          <td><button class="action-btn">Ver</button></td>
+        </tr>
+      </tbody>
+    </table>

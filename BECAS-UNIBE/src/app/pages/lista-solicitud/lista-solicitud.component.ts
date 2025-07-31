@@ -15,28 +15,48 @@ import { FormsModule } from '@angular/forms';
 export class ListaSolicitudComponent implements OnInit {
   postulaciones$: Observable<any[]> | undefined;
   busquedaCedula: string = '';
-
-  get postulacionesFiltradas() {
-    return this.filtradasPorCedula(this.postulacionesData || []);
-  }
+  busquedaPeriodo: string = '';
+  periodos: { id: string; nombrePeriodo: string }[] = [];
 
   postulacionesData: any[] = [];
 
   constructor(private firestore: Firestore) { }
 
   ngOnInit(): void {
+    // carga de periodos
+    const periodosRef = collection(this.firestore, 'periodos');
+    collectionData(periodosRef, { idField: 'id' })
+      .pipe(
+        tap((lista: any[]) => {
+          // mapear solo lo que necesitas
+          this.periodos = lista.map(p => ({
+            id: p.id,
+            nombrePeriodo: p.nombrePeriodo
+          }));
+        })
+      )
+      .subscribe();
+
+    // carga de periodos y usuarios
     const colRef = collection(this.firestore, 'postulaciones');
 
     this.postulaciones$ = collectionData(colRef, { idField: 'id' }).pipe(
       switchMap((postulaciones: any[]) => {
         const solicitudesConUsuario = postulaciones.map(async (p) => {
+          // datos del usuario
           const uid = p.datosPersonales?.uid;
           const userRef = doc(this.firestore, `usuarios/${uid}`);
           const userSnap = await getDoc(userRef);
           const userData = userSnap.exists() ? userSnap.data() : {};
+          // periodo
+          const periodoId = p.periodoId;
+          const periodoRef = doc(this.firestore, `periodos/${periodoId}`);
+          const periodoSnap = await getDoc(periodoRef);
+          const periodoData = periodoSnap.exists() ? periodoSnap.data() : {};
 
           return {
             cedulaUsuario: userData['cedula'] || 'No encontrada',
+            periodo: periodoData['nombrePeriodo'] || 'Periodo no encontrado',
             tipoBeca: p.datosPersonales?.tipoBeca || 'tipo de beca no especificado',
             tipoServicio: p.datosPersonales?.tipoServicio || 'tipo de servicio no especificado',
             fechaSolicitud: this.formatearFecha(p.fechaEnvio),
@@ -57,6 +77,22 @@ export class ListaSolicitudComponent implements OnInit {
     return lista.filter(p =>
       p.cedulaUsuario?.toLowerCase().includes(this.busquedaCedula.toLowerCase())
     );
+  }
+
+  filtrarPorPeriodo(lista: any[]) {
+    return lista.filter(p => p.periodo?.toLowerCase().includes(this.busquedaPeriodo.toLowerCase()));
+  }
+
+  get postulacionesFiltradas() {
+    return this.postulacionesData
+      .filter(p =>
+        p.cedulaUsuario.toLowerCase().includes(this.busquedaCedula.toLowerCase())
+      )
+      .filter(p =>
+        this.busquedaPeriodo === '' || this.busquedaPeriodo === 'Todos'
+          ? true
+          : p.periodo.toLowerCase() === this.busquedaPeriodo.toLowerCase()
+      );
   }
 
   formatearFecha(fechaFirebase: any): string {
