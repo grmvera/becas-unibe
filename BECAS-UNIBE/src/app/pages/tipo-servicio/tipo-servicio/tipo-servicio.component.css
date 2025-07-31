@@ -51,3 +51,10 @@ h2 {
 .subopcion:hover {
   background-color: #e0e0e0;
 }
+
+.sin-periodo {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 16px;
+  color: #a33;
+}

@@ -6,6 +6,8 @@
   color: #333;
 }
 
+
+
 .search-bar {
   display: flex;
   justify-content: center;
@@ -70,3 +72,34 @@
 .action-btn:hover {
   background-color: #005fa3;
 }
+
+/* contenedor de filtros */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+.buscador-filtro {
+  text-align: justify;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* estilo común para los select */
+.search-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  min-width: 200px;
+  appearance: none; 
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+}
+
+
+

@@ -1,0 +1,34 @@
+<div class="guarderia-container">
+  <h2>Requisitos para postulación a Guardería</h2>
+  <p>
+    Para postular, sube un único PDF que contenga TODOS los requisitos en el orden indicado:
+  </p>
+  <ol>
+    <li>Certificado de matriculación del niño en la guardería</li>
+    <li>Comprobante de asistencia del niño</li>
+    <li>Comprobante de pago por servicios</li>
+    <li>Copia de cédula del padre o madre</li>
+    <li>Partida de nacimiento del niño</li>
+    <li>Certificado “Detección de Conductas Adictivas”</li>
+    <li>Certificado “Ética y Felicidad”</li>
+  </ol>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="file-input">
+      <label for="archivo">Suba su PDF:</label>
+      <input
+        type="file"
+        id="archivo"
+        (change)="onFileChange($event)"
+        accept="application/pdf"
+      />
+      <div *ngIf="form.get('archivo')?.invalid && form.get('archivo')?.touched" class="error">
+        Debes elegir un archivo
+      </div>
+    </div>
+
+    <button mat-button color="primary" type="submit" [disabled]="form.invalid">
+      Enviar
+    </button>
+  </form>
+</div>

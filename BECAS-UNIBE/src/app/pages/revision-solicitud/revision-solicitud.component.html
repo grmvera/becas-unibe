@@ -4,8 +4,8 @@
   <thead>
     <tr>
       <th>Cédula</th>
-      <th>Tipo de Beca</th>
       <th>Tipo de Servicio</th>
+      <th>Tipo de Beca</th>
       <th>Fecha de Solicitud</th>
       <th>Estado de la Solicitud</th>
       <th>Acciones</th>
@@ -14,8 +14,8 @@
   <tbody>
     <tr *ngFor="let p of postulacionesData">
       <td>{{ p.cedulaUsuario }}</td>
-      <td>{{ p.tipoBeca }}</td>
       <td>{{ p.tipoServicio }}</td>
+      <td>{{ p.tipoBeca }}</td>
       <td>{{ p.fechaSolicitud }}</td>
       <td [ngClass]="{
         'aprobado': p.estadoAprobacion === true,
