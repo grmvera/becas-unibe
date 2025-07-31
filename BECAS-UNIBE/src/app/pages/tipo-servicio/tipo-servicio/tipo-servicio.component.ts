@@ -11,8 +11,9 @@ import { Auth } from '@angular/fire/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { PostulacionService } from '../../../shared/services/postulacion.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
-
+import { addDoc, collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { ref, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
+import { DatoGuarderiaComponent } from '../../../postulacion-formulario/dato-guarderia/dato-guarderia.component';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -27,7 +28,8 @@ import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angu
     DatoSaludComponent,
     DatoDiscapacidadComponent,
     AnexoCarnetComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
+    DatoGuarderiaComponent
   ],
   templateUrl: './tipo-servicio.component.html',
   styleUrls: ['./tipo-servicio.component.css']
@@ -55,8 +57,6 @@ export class TipoServicioComponent {
   becaSeleccionada: string | null = null;
   etapaFormulario = 1;
 
-
-
   private firestore = inject(Firestore);
   datosPersonalesForm: FormGroup;
   grupoFamiliarForm: FormGroup;
@@ -64,6 +64,7 @@ export class TipoServicioComponent {
   datosSaludForm: FormGroup;
   datosDiscapacidadForm: FormGroup;
   anexoCarnetForm: FormGroup;
+  datosGuarderiaForm: FormGroup;
 
   enviandoFormulario = false;
 
@@ -183,6 +184,10 @@ export class TipoServicioComponent {
       urlConadis: [''],
       urlRequisitos: ['']
     });
+
+    this.datosGuarderiaForm = this.fb.group({
+      urlguarderia: [''],
+    });
   }
 
   get isBecaDiscapacidad(): boolean {
@@ -225,6 +230,59 @@ export class TipoServicioComponent {
     this.etapaFormulario = 6;
   }
 
+  formularioGuarderia(datos: any) {
+    this.datosGuarderiaForm.patchValue(datos);
+
+  }
+
+async enviarFormularioGuarderia(formData: FormData) {
+  if (this.enviandoFormulario) return;
+  this.enviandoFormulario = true;
+
+  try {
+    const file = formData.get('archivo') as File | null;
+    if (!file) throw new Error('No se ha seleccionado ningún archivo.');
+
+    const storageInstance = getStorage();
+    const storageRef = ref(
+      storageInstance,
+      `guarderia/${this.periodoId}/${file.name}`
+    );
+
+    const uploadSnap = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(uploadSnap.ref);
+
+      const nuevaPostulacion = {
+        tipoServicio: 'GUARDERÍA',
+        anexoGuarderiaUrl: downloadURL,
+        periodoId: this.periodoId,
+        uid: this.datosPersonalesForm.get('uid')?.value,
+        fechaEnvio: new Date(),
+        estadoSolicitud: true,
+        estadoAprobacion: null
+      };
+      await addDoc(collection(this.firestore, 'postulaciones'), nuevaPostulacion);
+      this.snackBar.open(
+        '✅ Formulario de guardería enviado correctamente',
+        'Cerrar',
+        { duration: 5000, panelClass: ['snackbar-success'] }
+      );
+
+    } catch (err) {
+      console.error(err);
+      this.snackBar.open(
+        '❌ Error al enviar el formulario de guardería',
+        'Cerrar',
+        { duration: 6000, panelClass: ['snackbar-error'] }
+      );
+
+    } finally {
+      this.enviandoFormulario = false;
+    }
+  }
+
+
+  // envio de formulario general
   enviarFormularioFinal(datos: any) {
     if (this.enviandoFormulario) return;
 
@@ -247,14 +305,12 @@ export class TipoServicioComponent {
 
     this.postulacionService.guardarPostulacion(formularioCompleto)
       .then(() => {
-        console.log('✅ Formulario guardado exitosamente en Firestore');
         this.snackBar.open('Formulario enviado correctamente ✅', 'Cerrar', {
           duration: 5000,
           panelClass: ['snackbar-success']
         });
       })
       .catch(error => {
-        console.error('❌ Error al guardar formulario:', error);
         this.snackBar.open('Error al enviar el formulario ❌', 'Cerrar', {
           duration: 6000,
           panelClass: ['snackbar-error']
@@ -268,7 +324,7 @@ export class TipoServicioComponent {
   regresarADatosPersonales() {
     this.etapaFormulario = 1;
   }
-  regresarADiscapacidad() { 
-    this.etapaFormulario = 4; 
+  regresarADiscapacidad() {
+    this.etapaFormulario = 4;
   }
 }

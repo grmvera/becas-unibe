@@ -1,0 +1,89 @@
+/* contenedor general */
+.guarderia-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #333;
+}
+
+/* título */
+.guarderia-container h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #d32f2f;
+}
+
+/* párrafo introductorio */
+.guarderia-container p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* lista de requisitos */
+.guarderia-container ol {
+  margin: 0 0 1.5rem 1.4rem;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.guarderia-container ol li {
+  margin-bottom: 0.5rem;
+}
+
+/* estilo del input file */
+.file-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.file-input label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.file-input input[type="file"] {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* mensaje de error */
+.error {
+  margin-top: 0.25rem;
+  color: #d32f2f;
+  font-size: 0.85rem;
+}
+
+/* botón de envío */
+button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #115293;
+}
+
+button[type="submit"]:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}

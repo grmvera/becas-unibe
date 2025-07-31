@@ -48,6 +48,11 @@ export class ListaSolicitudComponent implements OnInit {
           const userRef = doc(this.firestore, `usuarios/${uid}`);
           const userSnap = await getDoc(userRef);
           const userData = userSnap.exists() ? userSnap.data() : {};
+
+          const id = p.uid;
+          const userGuarderiaRef = doc(this.firestore, `usuarios/${id}`);
+          const userGuarderiaSnap = await getDoc(userGuarderiaRef);
+          const userGuarderiaData = userGuarderiaSnap.exists() ? userGuarderiaSnap.data() : {};
           // periodo
           const periodoId = p.periodoId;
           const periodoRef = doc(this.firestore, `periodos/${periodoId}`);
@@ -55,7 +60,7 @@ export class ListaSolicitudComponent implements OnInit {
           const periodoData = periodoSnap.exists() ? periodoSnap.data() : {};
 
           return {
-            cedulaUsuario: userData['cedula'] || 'No encontrada',
+            cedulaUsuario: userData['cedula'] || userGuarderiaData['cedula'] || 'Cédula no encontrada',
             periodo: periodoData['nombrePeriodo'] || 'Periodo no encontrado',
             tipoBeca: p.datosPersonales?.tipoBeca || 'tipo de beca no especificado',
             tipoServicio: p.datosPersonales?.tipoServicio || 'tipo de servicio no especificado',
