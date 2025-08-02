@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection, collectionData, doc, getDoc } from '@angular/fire/firestore';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
+import { SolicitudDetailDialogComponent } from './solicitud-detail-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-lista-solicitud',
@@ -13,6 +15,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./lista-solicitud.component.css']
 })
 export class ListaSolicitudComponent implements OnInit {
+  private dialog = inject(MatDialog);
   postulaciones$: Observable<any[]> | undefined;
   busquedaCedula: string = '';
   busquedaPeriodo: string = '';
@@ -28,7 +31,6 @@ export class ListaSolicitudComponent implements OnInit {
     collectionData(periodosRef, { idField: 'id' })
       .pipe(
         tap((lista: any[]) => {
-          // mapear solo lo que necesitas
           this.periodos = lista.map(p => ({
             id: p.id,
             nombrePeriodo: p.nombrePeriodo
@@ -60,10 +62,17 @@ export class ListaSolicitudComponent implements OnInit {
           const periodoData = periodoSnap.exists() ? periodoSnap.data() : {};
 
           return {
+            id: p.id,
             cedulaUsuario: userData['cedula'] || userGuarderiaData['cedula'] || 'Cédula no encontrada',
+            nombreUsuario: userData['nombres' ] + ' ' + userData['apellidos'] || 'Nombre no encontrado',
+            correoUsuario: userData['correo'] || 'Correo no encontrado',
+            descipcion: p.datosSalud?.justificacion || 'No posee justificación encontrado',
+            archivosConadis: p.anexoCarnet?.urlConadis || 'No posee archivos',
+            archivosRequisitos: p.anexoCarnet?.urlRequisitos || 'No posee archivos',
+            archivosguarderia: p.anexoGuarderiaUrl || 'No posee archivos',
             periodo: periodoData['nombrePeriodo'] || 'Periodo no encontrado',
             tipoBeca: p.datosPersonales?.tipoBeca || 'tipo de beca no especificado',
-            tipoServicio: p.datosPersonales?.tipoServicio || 'tipo de servicio no especificado',
+            tipoServicio: p.datosPersonales?.tipoServicio || p.tipoServicio ||'tipo de servicio no especificado',
             fechaSolicitud: this.formatearFecha(p.fechaEnvio),
             estadoAprobacion: p.estadoAprobacion,
           };
@@ -111,5 +120,11 @@ export class ListaSolicitudComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
+  openDialog(solicitud: any) {
+    this.dialog.open(SolicitudDetailDialogComponent, {
+      width: '400px',
+      data: solicitud
+    });
+  }
 
 }

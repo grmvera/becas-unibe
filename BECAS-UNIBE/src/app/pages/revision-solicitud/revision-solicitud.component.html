@@ -23,9 +23,11 @@
         'sin-revisar': p.estadoAprobacion === null || p.estadoAprobacion === undefined
       }">
         {{ p.estadoAprobacion === true ? 'Aprobado' :
-           p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
+        p.estadoAprobacion === false ? 'Rechazado' : 'Sin revisar' }}
       </td>
-      <td><button class="action-btn">Ver</button></td>
+      <td>
+        <button mat-button class="action-btn" (click)="openDialog(p)">Ver</button>
+      </td>
     </tr>
   </tbody>
 </table>
