@@ -14,16 +14,18 @@ import { ChartData } from 'chart.js';
   imports: [CommonModule, NgChartsModule]
 })
 export class DashboardComponent implements OnInit {
+  // Inyecciones
   private firestore = inject(Firestore);
-  private auth = inject(Auth);
+  private auth      = inject(Auth);
 
-  periodoActivo: any = null;
-  usuarioRol: string | null = null;
+  // Estado del componente
+  periodoActivo: any         = null;
+  usuarioRol: string | null  = null;
 
-  postulacionesTotales: number = 0;
-  becas: number = 0;
-  ayudas: number = 0;
-  guarderia: number = 0;
+  postulacionesTotales = 0;
+  becas                = 0;
+  ayudas               = 0;
+  guarderia            = 0;
 
   chartDataBecas: ChartData<'doughnut'> = {
     labels: ['Becas', 'Otros'],
@@ -41,49 +43,69 @@ export class DashboardComponent implements OnInit {
   };
 
   async ngOnInit() {
+    // Obtener el rol del usuario
     const user = this.auth.currentUser;
     if (!user) return;
 
-    const usuarioRef = doc(this.firestore, `usuarios/${user.uid}`);
-    const usuarioSnap = await getDoc(usuarioRef);
+    const usuarioSnap = await getDoc(doc(this.firestore, `usuarios/${user.uid}`));
     if (usuarioSnap.exists()) {
-      const data = usuarioSnap.data();
-      this.usuarioRol = data['rol'] ?? null;
+      this.usuarioRol = usuarioSnap.data()?.['rol'] ?? null;
     }
 
+    // Cargar el periodo activo
     const periodosRef = collection(this.firestore, 'periodos');
-    const q = query(periodosRef, where('estado', '==', true));
-    const snapshot = await getDocs(q);
+    const periodoQ    = query(periodosRef, where('estado', '==', true));
+    const periodoSnap = await getDocs(periodoQ);
 
-    if (!snapshot.empty) {
-      const docRef = snapshot.docs[0];
-      const data = docRef.data();
+    if (periodoSnap.empty) return;
 
-      const detallesRef = doc(this.firestore, `periodos/${docRef.id}/informacionPublica/detalles`);
-      const detallesSnap = await getDoc(detallesRef);
+    // Tomamos el primer periodo activo
+    const periodoDoc = periodoSnap.docs[0];
+    const periodoData= periodoDoc.data();
+    this.periodoActivo = {
+      ...periodoData,
+      ...(await (async () => {
+        const detallesSnap = await getDoc(
+          doc(this.firestore, `periodos/${periodoDoc.id}/informacionPublica/detalles`)
+        );
+        return detallesSnap.exists() ? detallesSnap.data()! : {};
+      })())
+    };
 
-      this.periodoActivo = detallesSnap.exists()
-        ? { ...data, ...detallesSnap.data() }
-        : data;
-    }
+    const periodoId = periodoDoc.id;
 
-    const postulacionesRef = collection(this.firestore, 'postulaciones');
-    const postulacionesSnap = await getDocs(postulacionesRef);
-    this.postulacionesTotales = postulacionesSnap.size;
+    //  Traer solamente las postulaciones de este periodo
+    const postulRef = collection(this.firestore, 'postulaciones');
+    const postulQ   = query(postulRef, where('periodoId', '==', periodoId));
+    const postulSnap = await getDocs(postulQ);
 
-    postulacionesSnap.forEach((doc) => {
-      const data = doc.data();
-      const tipo = data['datosPersonales']?.['tipoServicio'];
+    // Inicializar conteos
+    this.postulacionesTotales = postulSnap.size;
+    this.becas    = 0;
+    this.ayudas   = 0;
+    this.guarderia= 0;
 
-      if (tipo === 'TIPOS DE BECAS') this.becas++;
+    // Contar por tipo de servicio
+    postulSnap.forEach(docSnap => {
+      const data = docSnap.data();
+      const tipo = data['tipoServicio'];
+      if (tipo === 'TIPOS DE BECAS')       this.becas++;
       else if (tipo === 'AYUDAS ECONÓMICAS') this.ayudas++;
-      else if (tipo === 'GUARDERÍA') this.guarderia++;
+      else if (tipo === 'GUARDERÍA')        this.guarderia++;
     });
 
-
-    // Asignar datos a los gráficos
-    this.chartDataBecas.datasets[0].data = [this.becas, this.postulacionesTotales - this.becas];
-    this.chartDataAyudas.datasets[0].data = [this.ayudas, this.postulacionesTotales - this.ayudas];
-    this.chartDataGuarderia.datasets[0].data = [this.guarderia, this.postulacionesTotales - this.guarderia];
+    // Actualizar datos de los gráficos
+    this.chartDataBecas.datasets[0].data    = [
+      this.becas,
+      this.postulacionesTotales - this.becas
+    ];
+    this.chartDataAyudas.datasets[0].data   = [
+      this.ayudas,
+      this.postulacionesTotales - this.ayudas
+    ];
+    this.chartDataGuarderia.datasets[0].data= [
+      this.guarderia,
+      this.postulacionesTotales - this.guarderia
+    ];
   }
 }
