@@ -1,47 +1,71 @@
-h2 {
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
 }
 
-.report-table {
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.report-table th,
-.report-table td {
-  padding: 0.75rem 1rem;
+th {
+  background-color: #f3f4f6;
+  color: #333;
+  font-weight: 600;
+  padding: 1rem;
   text-align: left;
 }
 
-.report-table thead {
-  background-color: #f5f5f5;
-}
-
-.report-table tr + tr {
+td {
+  padding: 1rem;
   border-top: 1px solid #eee;
+  vertical-align: middle;
 }
 
-.badge {
-  display: inline-block;
-  padding: 0.25em 0.6em;
-  border-radius: 12px;
-  font-size: 0.85rem;
+td span {
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
   font-weight: 500;
 }
-.badge.activo {
-  background-color: #d4f8e8;
-  color: #007a4e;
-}
-.badge.inactivo {
-  background-color: #ffe1e1;
-  color: #a40000;
+
+.activo {
+  background-color: #e6ffed;
+  color: #087f23;
 }
 
+.inactivo {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+button {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
 .btn-download {
   background-color: #2962ff;
   color: white;
