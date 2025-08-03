@@ -1,0 +1,70 @@
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.report-table th,
+.report-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.report-table thead {
+  background-color: #f5f5f5;
+}
+
+.report-table tr + tr {
+  border-top: 1px solid #eee;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.badge.activo {
+  background-color: #d4f8e8;
+  color: #007a4e;
+}
+.badge.inactivo {
+  background-color: #ffe1e1;
+  color: #a40000;
+}
+
+.btn-download {
+  background-color: #2962ff;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+.btn-download:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
