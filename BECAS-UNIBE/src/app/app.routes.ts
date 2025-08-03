@@ -86,6 +86,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] }
       },
+      {
+        path: 'reporte',
+        loadComponent: () =>
+          import('./pages/reporte/reporte.component').then(
+            (m) => m.ReporteComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 

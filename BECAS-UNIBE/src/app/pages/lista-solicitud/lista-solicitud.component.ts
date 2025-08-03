@@ -71,7 +71,7 @@ export class ListaSolicitudComponent implements OnInit {
             archivosRequisitos: p.anexoCarnet?.urlRequisitos || 'No posee archivos',
             archivosguarderia: p.anexoGuarderiaUrl || 'No posee archivos',
             periodo: periodoData['nombrePeriodo'] || 'Periodo no encontrado',
-            tipoBeca: p.datosPersonales?.tipoBeca || 'tipo de beca no especificado',
+            tipoBeca: p.datosPersonales?.tipoBeca || 'Tipo de beca no especificado',
             tipoServicio: p.datosPersonales?.tipoServicio || p.tipoServicio ||'tipo de servicio no especificado',
             fechaSolicitud: this.formatearFecha(p.fechaEnvio),
             estadoAprobacion: p.estadoAprobacion,

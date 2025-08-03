@@ -1,0 +1,33 @@
+<h2>Descarga de Reportes</h2>
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Nombre del periodo</th>
+      <th>Estado</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of periodos$ | async">
+      <td>{{ p.nombrePeriodo }}</td>
+      <td>
+        <span class="badge" [class.activo]="p.estado" [class.inactivo]="!p.estado">
+          {{ p.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+      <td>
+        <button class="btn-download"
+                (click)="descargarPDF(p)"
+                [disabled]="isLoading(p.id)">
+          <ng-container *ngIf="!isLoading(p.id); else spinner">
+            Descargar PDF
+          </ng-container>
+          <ng-template #spinner>
+            <span class="spinner"></span>
+          </ng-template>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
