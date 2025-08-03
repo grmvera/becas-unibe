@@ -5,13 +5,14 @@ import { inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartData } from 'chart.js';
+import { ReporteComponent } from '../../../pages/reporte/reporte.component';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [CommonModule, NgChartsModule]
+  imports: [CommonModule, NgChartsModule, ReporteComponent]
 })
 export class DashboardComponent implements OnInit {
   // Inyecciones
