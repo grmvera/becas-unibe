@@ -1,38 +1,168 @@
 <h2>Registra una Nueva Cuenta</h2>
 
 <form [formGroup]="registroForm" (ngSubmit)="onSubmit()" autocomplete="off" class="form-container">
-    <div class="form-group">
-        <input formControlName="nombres" placeholder="Nombres" />
-        <input formControlName="apellidos" placeholder="Apellidos" />
+  <!-- Error general -->
+  <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+  <!-- Nombres y Apellidos -->
+  <div class="form-row two">
+    <div class="form-field">
+      <input formControlName="nombres" placeholder="Nombres" />
+      <small class="error" *ngIf="registroForm.get('nombres')?.invalid && (registroForm.get('nombres')?.touched || registroForm.get('nombres')?.dirty)">
+        Falta el nombre.
+      </small>
     </div>
 
-    <input formControlName="correo" type="email" placeholder="Correo" />
-    <input formControlName="cedula" placeholder="Cédula" />
-    <input formControlName="fechaNacimiento" type="date" placeholder="Fecha de nacimiento" />
+    <div class="form-field">
+      <input formControlName="apellidos" placeholder="Apellidos" />
+      <small class="error" *ngIf="registroForm.get('apellidos')?.invalid && (registroForm.get('apellidos')?.touched || registroForm.get('apellidos')?.dirty)">
+        Faltan los apellidos.
+      </small>
+    </div>
+  </div>
 
-    <select formControlName="genero">
+  <!-- Correo -->
+  <div class="form-field">
+    <input formControlName="correo" type="email" placeholder="Correo" autocomplete="email" />
+    <small class="error" *ngIf="registroForm.get('correo')?.errors && (registroForm.get('correo')?.touched || registroForm.get('correo')?.dirty)">
+      <span *ngIf="registroForm.get('correo')?.errors?.['required']">Falta el correo.</span>
+      <span *ngIf="registroForm.get('correo')?.errors?.['email']">El correo no es válido.</span>
+    </small>
+  </div>
+
+  <!-- Cédula -->
+  <div class="form-field">
+    <input
+      formControlName="cedula"
+      placeholder="Cédula"
+      maxlength="10"
+      inputmode="numeric"
+      autocomplete="off"
+      (input)="onCedulaInput($event)"
+    />
+    <small class="hint">Solo números, 10 dígitos.</small>
+    <small class="error" *ngIf="registroForm.get('cedula')?.errors && (registroForm.get('cedula')?.touched || registroForm.get('cedula')?.dirty)">
+      <span *ngIf="registroForm.get('cedula')?.errors?.['required']">Falta la cédula.</span>
+      <span *ngIf="registroForm.get('cedula')?.errors?.['pattern']">La cédula debe tener exactamente 10 números.</span>
+    </small>
+  </div>
+
+  <!-- Fecha de nacimiento -->
+  <div class="form-field">
+    <input formControlName="fechaNacimiento" type="date" placeholder="Fecha de nacimiento" />
+    <small class="error" *ngIf="registroForm.get('fechaNacimiento')?.invalid && (registroForm.get('fechaNacimiento')?.touched || registroForm.get('fechaNacimiento')?.dirty)">
+      Falta la fecha de nacimiento.
+    </small>
+  </div>
+
+  <!-- Género y Estado Civil -->
+  <div class="form-row two">
+    <div class="form-field">
+      <select formControlName="genero">
         <option value="">Seleccione género</option>
         <option value="Masculino">Masculino</option>
         <option value="Femenino">Femenino</option>
-    </select>
+        <option value="Otro">Otro</option>
+        <option value="NoEspecifica">Prefiero no decir</option>
+      </select>
+      <small class="error" *ngIf="registroForm.get('genero')?.invalid && (registroForm.get('genero')?.touched || registroForm.get('genero')?.dirty)">
+        Falta seleccionar el género.
+      </small>
+    </div>
 
-    <input formControlName="estadoCivil" placeholder="Estado civil" />
+    <div class="form-field">
+      <select formControlName="estadoCivil">
+        <option value="">Seleccione estado civil</option>
+        <option value="Soltero">Soltero</option>
+        <option value="Casado">Casado</option>
+        <option value="Divorciado">Divorciado</option>
+        <option value="Viudo">Viudo</option>
+      </select>
+      <small class="error" *ngIf="registroForm.get('estadoCivil')?.invalid && (registroForm.get('estadoCivil')?.touched || registroForm.get('estadoCivil')?.dirty)">
+        Falta el estado civil.
+      </small>
+    </div>
+  </div>
+
+  <!-- Nacionalidad -->
+  <div class="form-field">
     <input formControlName="nacionalidad" placeholder="Nacionalidad" />
-    <input formControlName="telefonoFijo" placeholder="Teléfono fijo" />
-    <input formControlName="telefonoMovil" placeholder="Teléfono móvil" />
-    <input formControlName="anioIngreso" placeholder="Año de ingreso" />
-    <input formControlName="carrera" placeholder="Carrera" />
-    <input formControlName="password" type="password" placeholder="Contraseña" />
+    <small class="error" *ngIf="registroForm.get('nacionalidad')?.invalid && (registroForm.get('nacionalidad')?.touched || registroForm.get('nacionalidad')?.dirty)">
+      Falta la nacionalidad.
+    </small>
+  </div>
 
-    <button type="submit">Registrar</button>
-    <button type="button" (click)="irALogin()">¿Ya tienes cuenta? Inicia sesión</button>
+  <!-- Teléfonos -->
+  <div class="form-row two">
+    <div class="form-field">
+      <input formControlName="telefonoFijo" placeholder="Teléfono fijo (opcional)" inputmode="tel" />
+    </div>
+    <div class="form-field">
+      <input formControlName="telefonoMovil" maxlength="10" placeholder="Teléfono móvil" inputmode="tel" />
+      <small class="error" *ngIf="registroForm.get('telefonoMovil')?.invalid && (registroForm.get('telefonoMovil')?.touched || registroForm.get('telefonoMovil')?.dirty)">
+        Falta el teléfono móvil.
+      </small>
+    </div>
+  </div>
+
+  <!-- Año de ingreso -->
+  <div class="form-field">
+    <input formControlName="anioIngreso" type="number" placeholder="Año de ingreso (YYYY)" min="1990" max="2025" />
+    <small class="error" *ngIf="registroForm.get('anioIngreso')?.invalid && (registroForm.get('anioIngreso')?.touched || registroForm.get('anioIngreso')?.dirty)">
+      Falta el año de ingreso.
+    </small>
+  </div>
+
+  <!-- Carrera -->
+  <div class="form-field">
+    <select formControlName="carrera">
+      <option value="">Seleccione Carrera</option>
+      <option value="licenciaturaEnfermeria">Licenciatura en Enfermería</option>
+      <option value="licenciaturaFisioterapia">Licenciatura en Fisioterapia</option>
+      <option value="licenciaturaNutricion">Licenciatura en Nutrición</option>
+      <option value="licenciaturaPsicologia">Licenciatura en Psicología</option>
+      <option value="licenciaturaEducacionBasica">Licenciatura en Ciencias de la Educación Básica</option>
+      <option value="licenciaturaMultimedia">Licenciatura en Multimedia y Producción Audiovisual</option>
+      <option value="medicina">Medicina</option>
+      <option value="odontologia">Odontología</option>
+      <option value="psicologiaClinica">Psicología Clínica</option>
+      <option value="contabilidadAuditoria">Contabilidad y Auditoría</option>
+      <option value="derecho">Derecho</option>
+      <option value="economia">Economía</option>
+      <option value="ingenieriaSoftware">Ingeniería de Software</option>
+      <option value="licenciaturaAdministracion">Licenciatura en Administración de Empresas</option>
+      <option value="licenciaturaGastronomia">Licenciatura en Gastronomía</option>
+      <option value="licenciaturaProduccionMedios">Licenciatura en Producción para Medios de Comunicación</option>
+      <option value="licenciaturaTurismo">Licenciatura en Turismo</option>
+    </select>
+    <small class="error" *ngIf="registroForm.get('carrera')?.invalid && (registroForm.get('carrera')?.touched || registroForm.get('carrera')?.dirty)">
+      Falta seleccionar la carrera.
+    </small>
+  </div>
+
+  <!-- Semestre -->
+  <div class="form-field">
+    <select formControlName="semestre">
+      <option value="">Seleccione semestre</option>
+      <option *ngFor="let n of [1,2,3,4,5,6,7,8,8,10]; let i = index" [value]="i+1">{{ i+1 }}</option>
+    </select>
+    <small class="error" *ngIf="registroForm.get('semestre')?.invalid && (registroForm.get('semestre')?.touched || registroForm.get('semestre')?.dirty)">
+      Falta seleccionar el semestre.
+    </small>
+  </div>
+
+  <!-- Password -->
+  <div class="form-field">
+    <input formControlName="password" type="password" placeholder="Contraseña (mínimo 6 caracteres)" autocomplete="new-password" />
+    <small class="error" *ngIf="registroForm.get('password')?.errors && (registroForm.get('password')?.touched || registroForm.get('password')?.dirty)">
+      <span *ngIf="registroForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+      <span *ngIf="registroForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
+    </small>
+  </div>
+
+  <!-- Acciones -->
+  <div class="actions">
+    <button type="submit" class="btn-primary">Registrar</button>
+    <button type="button" class="btn-ghost" (click)="irALogin()">¿Ya tienes cuenta? Inicia sesión</button>
+  </div>
 </form>
-
-<p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
-
-<div *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched">
-    <small class="error" *ngIf="registroForm.get('password')?.errors?.['required']">La contraseña es
-        obligatoria.</small>
-    <small class="error" *ngIf="registroForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6
-        caracteres.</small>
-</div>

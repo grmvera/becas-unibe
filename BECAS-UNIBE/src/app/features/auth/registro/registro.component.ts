@@ -6,7 +6,6 @@ import { doc, setDoc } from 'firebase/firestore';
 import { CommonModule } from '@angular/common';
 import { auth, db } from '../../../../firebase';
 
-
 @Component({
   selector: 'app-registro',
   standalone: true,
@@ -15,11 +14,8 @@ import { auth, db } from '../../../../firebase';
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent {
-  irALogin() {
-    this.router.navigate(['']);
-  }
-
   errorMessage = '';
+  submitted = false;
   registroForm: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -27,22 +23,45 @@ export class RegistroComponent {
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      cedula: ['', Validators.required],
+      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]], // 10 dígitos
       fechaNacimiento: ['', Validators.required],
       genero: ['', Validators.required],
       estadoCivil: ['', Validators.required],
       nacionalidad: ['', Validators.required],
       telefonoFijo: [''],
-      telefonoMovil: ['', Validators.required],
+      telefonoMovil: ['', [Validators.required]],
       anioIngreso: ['', Validators.required],
       carrera: ['', Validators.required],
+      semestre: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
+  // Acceso rápido a los controles en el template
+  get f() { return this.registroForm.controls; }
+
+  irALogin() {
+    this.router.navigate(['']);
+  }
+
+  // Sanitiza la cédula: solo dígitos y máximo 10
+  onCedulaInput(event: Event) {
+    const el = event.target as HTMLInputElement;
+    const soloDigitos = el.value.replace(/\D+/g, '').slice(0, 10);
+    if (el.value !== soloDigitos) {
+      el.value = soloDigitos;
+    }
+    this.f['cedula'].setValue(soloDigitos, { emitEvent: false });
+    this.f['cedula'].markAsDirty();
+    this.f['cedula'].markAsTouched();
+  }
+
   async onSubmit() {
+    this.submitted = true;
+    this.errorMessage = '';
+
     if (this.registroForm.invalid) {
-      this.errorMessage = 'Por favor completa todos los campos obligatorios.';
+      this.errorMessage = 'Falta completar campos obligatorios o hay datos con formato inválido.';
       return;
     }
 

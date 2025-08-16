@@ -1,60 +1,96 @@
-<div *ngIf="periodoActivo" class="contenedor">
+<div *ngIf="periodoActivo; else noPeriodo" class="contenedor">
   <h2>Tipo de servicio</h2>
 
+  <!-- Servicios -->
   <div class="menu-servicios">
-    <div *ngFor="let servicio of tiposServicios" class="opcion"
-      [ngClass]="{ 'activo': servicioSeleccionado === servicio }" (click)="seleccionarServicio(servicio)">
+    <div *ngFor="let servicio of tiposServicios; trackBy: trackByServicio" class="opcion"
+      [ngClass]="{ 'activo': servicioSeleccionado === servicio }"
+      (click)="seleccionarServicio(servicio); logEtapa('seleccionarServicio')">
       {{ servicio }}
     </div>
   </div>
 
+  <!-- Subopciones de becas -->
   <div *ngIf="servicioSeleccionado === 'TIPOS DE BECAS'" class="subopciones">
-    <div class="subopcion" *ngFor="let beca of becas" (click)="seleccionarBeca(beca)">
+    <div class="subopcion" [ngClass]="{ 'activo': becaSeleccionada === beca }"
+      *ngFor="let beca of becas; trackBy: trackByBeca" (click)="seleccionarBeca(beca); logEtapa('seleccionarBeca')">
       {{ beca }}
     </div>
   </div>
 
-  <!-- Etapa 1: Datos personales -->
-  <app-datos-personales *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 1"
-    [form]="datosPersonalesForm" (pasoCompletado)="avanzarGrupoFamiliar($event)">
-  </app-datos-personales>
+  <!-- Panel de descripción de la selección -->
+  <div *ngIf="servicioSeleccionado" class="seleccion-resumen">
+    <div class="chips">
+      <span class="chip">Servicio: {{ servicioSeleccionado }}</span>
+      <span class="chip" *ngIf="servicioSeleccionado === 'TIPOS DE BECAS' && becaSeleccionada">
+        Beca: {{ becaSeleccionada }}
+      </span>
+    </div>
 
-  <!-- Etapa 2: Grupo familiar -->
-  <app-datos-grupo-familiar *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 2"
-    [form]="grupoFamiliarForm" (volverAtras)="regresarADatosPersonales()"
-    (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event)">
-  </app-datos-grupo-familiar>
+    <h3 class="sel-titulo">{{ tituloSeleccion }}</h3>
+    <p class="sel-desc">{{ descripcionSeleccion }}</p>
 
-  <!-- Etapa 3: Socioeconómico -->
-  <app-datos-socioeconomico *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 3"
-    [form]="socioeconomicoForm" (volverAtras)="etapaFormulario = 2" (avanzarSalud)="avanzarDatosSalud($event)">
-  </app-datos-socioeconomico>
+    <ul class="sel-req" *ngIf="requisitosSeleccion?.length">
+      <li *ngFor="let r of requisitosSeleccion">{{ r }}</li>
+    </ul>
+  </div>
 
-  <!-- Etapa 4: Salud -->
-  <app-dato-salud *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 4" [form]="datosSaludForm"
-    (volverAtras)="etapaFormulario = 3" (avanzarDiscapacidad)="avanzarDatosDiscapacidad($event)">
-  </app-dato-salud>
+  <!-- Aviso si falta selección -->
+  <div class="callout" *ngIf="!puedeMostrarFormulario">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-body">
+      <strong>Selecciona para continuar</strong>
+      <div class="callout-text">{{ textoAviso }}</div>
+    </div>
+  </div>
 
-  <!-- Etapa 5: Discapacidad -->
-  <app-dato-discapacidad *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 5"
-    [form]="datosDiscapacidadForm" (volverAtras)="regresarADiscapacidad()"
-    (avanzarAnexoCarnet)="avanzarDatosAnexoCarnet($event)">
-  </app-dato-discapacidad>
+  <!-- Línea divisoria cuando ya se puede mostrar el formulario -->
+  <div class="divider" *ngIf="puedeMostrarFormulario">
+    <span>
+      {{
+      servicioSeleccionado === 'TIPOS DE BECAS'
+      ? (becaSeleccionada || 'Seleccione una beca')
+      : servicioSeleccionado
+      }} — formulario
+    </span>
+  </div>
 
-  <!-- Etapa 6: Anexo Carnet -->
-  <app-anexo-carnet *ngIf="servicioSeleccionado !== 'GUARDERÍA' && etapaFormulario === 6" [form]="anexoCarnetForm"
-    (volverAtras)="etapaFormulario = 5" (finalizar)="enviarFormularioFinal($event)">
-  </app-anexo-carnet>
+  <!-- Formulario para Becas / Ayudas -->
+  <ng-container *ngIf="puedeMostrarFormulario && servicioSeleccionado !== 'GUARDERÍA'">
+    <!-- Etapa 1: Datos personales -->
+    <app-datos-personales *ngIf="etapaFormulario === 1" [form]="datosPersonalesForm"
+      (pasoCompletado)="avanzarGrupoFamiliar($event); logEtapa('datosPersonales->grupoFamiliar')">
+    </app-datos-personales>
 
-  <!-- Etapa exclusiva: Guardería -->
+    <!-- Etapa 2: Grupo familiar -->
+    <app-datos-grupo-familiar *ngIf="etapaFormulario === 2" [form]="grupoFamiliarForm"
+      (volverAtras)="regresarADatosPersonales()"
+      (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event); logEtapa('grupoFamiliar->socioeconomico')">
+    </app-datos-grupo-familiar>
+
+    <!-- Etapa 3: Socioeconómico -->
+    <app-datos-socioeconomico *ngIf="etapaFormulario === 3" [form]="socioeconomicoForm"
+      (volverAtras)="etapaFormulario = 2" (avanzarSalud)="avanzarDatosSalud($event); logEtapa('socioeconomico->salud')">
+    </app-datos-socioeconomico>
+
+    <!-- Etapa 4: Salud -->
+    <app-dato-salud *ngIf="etapaFormulario === 4" [form]="datosSaludForm" (volverAtras)="etapaFormulario = 3"
+      (avanzarAnexoCarnet)="avanzarDatosAnexoCarnet($event); logEtapa('salud->anexo')">
+    </app-dato-salud>
+
+    <!-- Etapa 5: Anexo Carnet -->
+    <app-anexo-carnet *ngIf="etapaFormulario === 5" [form]="anexoCarnetForm" (volverAtras)="etapaFormulario = 4"
+      (finalizar)="enviarFormularioFinal($event)">
+    </app-anexo-carnet>
+  </ng-container>
+
+  <!-- Formulario exclusivo: Guardería -->
   <app-dato-guarderia *ngIf="servicioSeleccionado === 'GUARDERÍA'" (finalizar)="enviarFormularioGuarderia($event)">
   </app-dato-guarderia>
-
-
-
-
 </div>
 
-<div *ngIf="!periodoActivo" class="sin-periodo">
-  <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
-</div>
+<ng-template #noPeriodo>
+  <div class="sin-periodo">
+    <p><i class="fa-solid fa-triangle-exclamation"></i> No hay un periodo activo actualmente.</p>
+  </div>
+</ng-template>

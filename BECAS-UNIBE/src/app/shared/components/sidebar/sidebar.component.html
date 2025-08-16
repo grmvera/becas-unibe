@@ -20,10 +20,24 @@
 
       <!-- Solo para estudiante -->
       <ng-container *ngIf="usuario?.rol === 'student'">
-        <button (click)="navegar('/tipo-servicio')">📝 Postulación a Servicio</button>
+        <button
+          [disabled]="bloqueadoPorSemestre"
+          [class.disabled]="bloqueadoPorSemestre"
+          [attr.title]="bloqueadoPorSemestre ? 'Disponible a partir del 2.º semestre' : null"
+          (click)="navegarPostulacion()"
+        >
+          📝 Postulación a Servicio
+        </button>
+
+        <!-- Aviso si está bloqueado por semestre -->
+        <div *ngIf="bloqueadoPorSemestre" style="margin:6px 0 10px; font-size:12px; color:#b42318; line-height:1.3;">
+          ⚠️ Solo disponible a partir del <strong>2.º semestre</strong>.
+          <br />
+          <small *ngIf="semestreNumero !== null">Tu semestre registrado: {{ semestreNumero }}° Semestre</small>
+        </div>
+
         <button (click)="navegar('/revision-solicitud')">🔍 Revisión de Solicitud</button>
       </ng-container>
-
     </div>
   </div>
 
