@@ -84,3 +84,15 @@
     padding: 0.6rem;
   }
 }
+
+button.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nota-bloqueo {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  color: #b42318;
+  line-height: 1.3;
+}

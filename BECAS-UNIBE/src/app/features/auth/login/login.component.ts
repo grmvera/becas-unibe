@@ -70,7 +70,8 @@ export class LoginComponent {
         apellidos: data['apellidos'],
         correo: data['correo'],
         activo: data['activo'],
-        rol: data['rol'] || 'user'
+        rol: data['rol'] || 'user',
+        semestre: data['semestre'] || ''
       };
 
       this.usuarioService.setUsuario(usuario);
