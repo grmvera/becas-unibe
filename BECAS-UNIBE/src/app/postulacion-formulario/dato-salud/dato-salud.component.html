@@ -53,13 +53,12 @@
       proyecto de estudio</label>
   </div>
 
-  <div class="justificacion-box" [formGroup]="form">
+  <div class="justificacion-box">
     <h4>SITUACIÓN ACTUAL DEL ESTUDIANTE</h4>
     <p><strong>Justifique aquí aspectos de solicitud de beca (mencione sus dificultades, fortalezas y
         compromisos).</strong></p>
     <textarea formControlName="justificacion" class="justificacion-textarea" rows="5"></textarea>
   </div>
-
 
   <div class="navegacion">
     <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>

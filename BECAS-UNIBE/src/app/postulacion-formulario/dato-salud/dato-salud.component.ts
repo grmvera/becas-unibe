@@ -11,14 +11,13 @@ import { CommonModule } from '@angular/common';
 })
 export class DatoSaludComponent {
   @Input() form!: FormGroup;
+  @Output() avanzarAnexoCarnet = new EventEmitter<any>();
   @Output() volverAtras = new EventEmitter<void>();
-  @Output() avanzarDiscapacidad = new EventEmitter<any>();
 
   opcionesProblemas = ['Ninguna', 'Enfermedad crónica', 'Discapacidad', 'Otro'];
   opcionesAyuda = ['Sí', 'No'];
 
-  constructor(private fb: FormBuilder) { }
-
+  constructor(private fb: FormBuilder) {}
 
   get salud(): FormArray {
     return this.form.get('salud') as FormArray;
@@ -29,13 +28,14 @@ export class DatoSaludComponent {
     return grupo instanceof FormGroup ? grupo : null;
   }
 
-
   agregarIntegrante() {
-    this.salud.push(this.fb.group({
-      parentesco: [''],
-      problema: ['Ninguna'],
-      ayuda: ['No']
-    }));
+    this.salud.push(
+      this.fb.group({
+        parentesco: [''],
+        problema: ['Ninguna'],
+        ayuda: ['No']
+      })
+    );
   }
 
   eliminarIntegrante(index: number) {
@@ -43,12 +43,17 @@ export class DatoSaludComponent {
   }
 
   emitirVolverAtras() {
-    console.log('Volver a etapa anterior');
     this.volverAtras.emit();
   }
 
   emitirFinalizar() {
-    console.log('Datos de salud:', this.form.value);
-    this.avanzarDiscapacidad.emit(this.form.value);
+    // Emite SOLO si el form es válido (marca todo si no lo es)
+    if (this.form?.valid) {
+      const payload = this.form.getRawValue();
+      console.log('Datos de salud:', payload);
+      this.avanzarAnexoCarnet.emit(payload);
+    } else {
+      this.form?.markAllAsTouched();
+    }
   }
 }
