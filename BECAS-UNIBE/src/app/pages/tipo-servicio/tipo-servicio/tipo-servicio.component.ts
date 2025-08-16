@@ -75,6 +75,81 @@ export class TipoServicioComponent {
   periodoActivo: any = null;
   periodoId: string = '';
 
+  // --- NUEVO: textos para el panel de descripción ---
+  servicioInfo: Record<string, { titulo: string; descripcion: string; requisitos?: string[] }> = {
+    'TIPOS DE BECAS': {
+      titulo: 'Postulación a Becas Institucionales',
+      descripcion:
+        'Selecciona un tipo de beca para continuar con tu postulación. La elegibilidad se evaluará con base en la documentación y la información proporcionada en el formulario.'
+    },
+    'AYUDAS ECONÓMICAS': {
+      titulo: 'Ayudas Económicas',
+      descripcion:
+        'Apoyo económico temporal según evaluación socioeconómica del estudiante y su núcleo familiar.',
+      requisitos: [
+        'Completar la información socioeconómica.',
+        'Adjuntar documentación de respaldo (si corresponde).'
+      ]
+    },
+    'GUARDERÍA': {
+      titulo: 'Servicio de Guardería',
+      descripcion:
+        'Apoyo para cuidado infantil durante el periodo académico activo para estudiantes que cumplan los criterios.',
+      requisitos: [
+        'Adjuntar el archivo requerido en la sección de guardería.',
+        'Confirmar datos del estudiante y del menor a cargo (si aplica).'
+      ]
+    }
+  };
+
+  becaInfo: Record<string, { titulo: string; descripcion: string; requisitos?: string[] }> = {
+    'Beca por Excelencia Académica': {
+      titulo: 'Beca por Excelencia Académica',
+      descripcion: 'Reconoce el alto rendimiento académico del estudiante.',
+      requisitos: ['Historial académico actualizado.']
+    },
+    'Beca para Deportistas destacados': {
+      titulo: 'Beca para Deportistas Destacados',
+      descripcion:
+        'Orienta su apoyo a estudiantes que representan a su institución o federación en competencias deportivas.',
+      requisitos: ['Certificados o avales deportivos recientes.']
+    },
+    'Beca Socioeconómica': {
+      titulo: 'Beca Socioeconómica',
+      descripcion: 'Se asigna en función del análisis socioeconómico del hogar.',
+      requisitos: ['Registro completo de gastos/ingresos.', 'Documentos de respaldo.']
+    },
+    'Beca por Actividades Culturales': {
+      titulo: 'Beca por Actividades Culturales',
+      descripcion:
+        'Apoya la participación activa en actividades artísticas o culturales representativas.'
+    },
+    'Beca por Desarrollo Profesional': {
+      titulo: 'Beca por Desarrollo Profesional',
+      descripcion:
+        'Fomenta la participación en proyectos, voluntariados y formación complementaria.'
+    },
+    'Beca Honorífica': {
+      titulo: 'Beca Honorífica',
+      descripcion: 'Reconoce méritos institucionales y/o comunitarios destacados.'
+    },
+    'Beca SNNA': {
+      titulo: 'Beca SNNA',
+      descripcion:
+        'Asignación sujeta a lineamientos y cumplimiento de requisitos establecidos por la institución.'
+    },
+    'Beca víctimas violencia de género': {
+      titulo: 'Beca para Víctimas de Violencia de Género',
+      descripcion: 'Apoya a estudiantes que acrediten situaciones de violencia de género.',
+      requisitos: ['Documentación o constancias pertinentes.']
+    },
+    'Beca Discapacidad': {
+      titulo: 'Beca por Discapacidad',
+      descripcion: 'Apoya a estudiantes con discapacidad acreditada.',
+      requisitos: ['Carnet/constancia vigente según corresponda.']
+    }
+  };
+
   constructor(
     private fb: FormBuilder,
     private auth: Auth,
@@ -185,7 +260,6 @@ export class TipoServicioComponent {
 
   // -------- Navegación / Selección ----------
   seleccionarServicio(servicio: string) {
-    // Toggle y reinicio de flujo
     this.servicioSeleccionado = this.servicioSeleccionado === servicio ? null : servicio;
     this.becaSeleccionada = null;
     this.etapaFormulario = 1;
@@ -196,7 +270,7 @@ export class TipoServicioComponent {
   seleccionarBeca(beca: string) {
     this.becaSeleccionada = beca;
     this.datosPersonalesForm.get('tipoBeca')?.setValue(this.becaSeleccionada);
-    this.etapaFormulario = 1; // Asegura arrancar desde el paso 1
+    this.etapaFormulario = 1;
   }
 
   // -------- Avances entre pasos (becas/ayudas) ----------
@@ -216,7 +290,6 @@ export class TipoServicioComponent {
   }
 
   avanzarDatosAnexoCarnet(datos: any) {
-    // Desde el componente de Salud
     this.datosSaludForm.patchValue(datos ?? {});
     this.etapaFormulario = 5;
   }
@@ -279,7 +352,7 @@ export class TipoServicioComponent {
       datosSalud: this.datosSaludForm.value,
       anexoCarnet: this.anexoCarnetForm.value,
       fechaEnvio: new Date(),
-      estadoSoliticitud: true, // se mantiene el nombre usado previamente
+      estadoSoliticitud: true,
       estadoAprobacion: null,
       periodoId: this.periodoId
     };
@@ -307,14 +380,62 @@ export class TipoServicioComponent {
     this.etapaFormulario = 1;
   }
 
-  // --- trackBy para evitar errores y renders extra ---
+  // --- trackBy para evitar renders extra ---
   trackByServicio = (_: number, s: string) => s;
   trackByBeca = (_: number, b: string) => b;
 
-  // (Opcional) utilidad de depuración
   logEtapa(origen: string) {
     console.log(`[Flujo] ${origen} -> etapa`, this.etapaFormulario, {
       servicio: this.servicioSeleccionado, beca: this.becaSeleccionada
     });
+  }
+
+  // ---------- Getters para el panel de descripción ----------
+  get tituloSeleccion(): string {
+    if (!this.servicioSeleccionado) return '';
+    if (this.servicioSeleccionado === 'TIPOS DE BECAS' && this.becaSeleccionada) {
+      return this.becaInfo[this.becaSeleccionada]?.titulo ?? this.becaSeleccionada;
+    }
+    return this.servicioInfo[this.servicioSeleccionado]?.titulo ?? this.servicioSeleccionado;
+  }
+
+  get descripcionSeleccion(): string {
+    if (!this.servicioSeleccionado) return '';
+    const sDesc = this.servicioInfo[this.servicioSeleccionado]?.descripcion ?? '';
+    if (this.servicioSeleccionado === 'TIPOS DE BECAS' && this.becaSeleccionada) {
+      const bDesc = this.becaInfo[this.becaSeleccionada]?.descripcion ?? '';
+      return bDesc || sDesc;
+    }
+    return sDesc;
+  }
+
+  get requisitosSeleccion(): string[] {
+    if (!this.servicioSeleccionado) return [];
+    const base = this.servicioInfo[this.servicioSeleccionado]?.requisitos ?? [];
+    if (this.servicioSeleccionado === 'TIPOS DE BECAS' && this.becaSeleccionada) {
+      const extra = this.becaInfo[this.becaSeleccionada]?.requisitos ?? [];
+      return [...extra];
+    }
+    return base;
+  }
+
+  // ---------- Lógica para mostrar/ocultar formulario ----------
+  get puedeMostrarFormulario(): boolean {
+    if (!this.servicioSeleccionado) return false;
+    if (this.servicioSeleccionado === 'TIPOS DE BECAS') {
+      return !!this.becaSeleccionada;
+    }
+    return true;
+  }
+
+  /** Texto del aviso cuando aún no se puede mostrar el formulario */
+  get textoAviso(): string {
+    if (!this.servicioSeleccionado) {
+      return 'Selecciona un tipo de servicio para continuar con la postulación.';
+    }
+    if (this.servicioSeleccionado === 'TIPOS DE BECAS' && !this.becaSeleccionada) {
+      return 'Selecciona una beca para continuar con el formulario.';
+    }
+    return '';
   }
 }
