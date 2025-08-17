@@ -1,42 +1,82 @@
 <div class="box-discapacidad">
-  <h3>Anexo carnet CONADIS / cédula de identidad</h3>
-  <p class="descripcion">
-    Suba el documento que valide la discapacidad. Este puede ser el carnet de CONADIS y la cédula de identidad.
-    El documento que se suba aquí no se debe subir en el siguiente apartado. <strong>Debe ser un único archivo.</strong>
-  </p>
+  <!-- Tomamos requisitos dinámicos -->
+  <ng-container *ngIf="(requisitos$ | async) as reqs">
+    <!-- CUANDO HAY REQUISITOS: se muestra todo el formulario -->
+    <ng-container *ngIf="reqs.length > 0; else bloqueSinRequisitos">
 
-  <div class="fila-discapacidad">
-    <label for="archivoConadis">Suba su carnet CONADIS / cédula de identidad:</label>
-    <input type="file" id="archivoConadis" (change)="onArchivoSeleccionado($event, 'conadis')" accept=".pdf,.jpg,.jpeg,.png" />
-  </div>
+      <h3>Anexo carnet CONADIS / cédula de identidad</h3>
+      <p class="descripcion">
+        Suba el documento que valide la discapacidad. Este puede ser el carnet de CONADIS y la cédula de identidad.
+        El documento que se suba aquí no se debe subir en el siguiente apartado. <strong>Debe ser un único archivo.</strong>
+      </p>
 
-  <hr />
+      <div class="fila-discapacidad">
+        <label for="archivoConadis">Suba su carnet CONADIS / cédula de identidad:</label>
+        <input
+          type="file"
+          id="archivoConadis"
+          (change)="onArchivoSeleccionado($event, 'conadis')"
+          accept=".pdf,.jpg,.jpeg,.png"
+          [disabled]="!puedeSubir" />
+      </div>
 
-  <h3>Anexar documentos</h3>
-  <p class="descripcion">
-    Suba un documento PDF, máximo 5 Mb. Los documentos deben seguir el siguiente orden:
-  </p>
-  <ol class="lista-requisitos">
-    <li>Certificado de calificaciones remitido por secretaría de cada carrera</li>
-    <li>Certificado del Curso en Línea “Yo sé de género 1-2-3”...</li>
-    <li>Certificado del Curso virtual sobre Políticas de Alcohol y Salud Pública</li>
-    <li>Solicitud para incorporarse o renovar Beca...</li>
-    <li>Formulario de discapacidad (Anexo 2)</li>
-    <li>Copia de la Cédula de Identidad de la persona que financia sus estudios</li>
-    <li>Copia del rol de pagos o certificado de ingresos de la persona que financia...</li>
-  </ol>
+      <hr />
 
-  <div class="fila-discapacidad">
-    <label for="archivoRequisitos">Suba el documento con todos los requisitos:</label>
-    <input type="file" id="archivoRequisitos" (change)="onArchivoSeleccionado($event, 'requisitos')" accept=".pdf" />
-  </div>
+      <h3>Anexar documentos</h3>
+      <p class="descripcion">
+        Suba un documento PDF, máximo 5 Mb. Los documentos deben seguir el siguiente orden:
+      </p>
 
-  <div class="botones">
+      <ol class="lista-requisitos">
+        <li *ngFor="let r of reqs; index as i">{{ r }}</li>
+      </ol>
 
-  </div>
+      <div class="fila-discapacidad">
+        <label for="archivoRequisitos">Suba el documento con todos los requisitos:</label>
+        <input
+          type="file"
+          id="archivoRequisitos"
+          (change)="onArchivoSeleccionado($event, 'requisitos')"
+          accept=".pdf"
+          [disabled]="!puedeSubir" />
+      </div>
 
-  <div class="navegacion">
-    <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>
-    <button type="submit" class="btn-siguiente" (click)="subirArchivo()">Finalizar</button>
-  </div>
+      <div class="resumen-seleccion">
+        <strong>Servicio:</strong> {{ servicioActual || '—' }} |
+        <strong>Tipo de beca:</strong> {{ becaActual || '—' }}
+      </div>
+
+      <div class="navegacion">
+        <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>
+        <button type="button" class="btn-siguiente" (click)="subirArchivo()" [disabled]="!puedeFinalizar">
+          Finalizar
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- CUANDO NO HAY REQUISITOS: ocultar todo y solo mostrar aviso + Atrás -->
+    <ng-template #bloqueSinRequisitos>
+      <h3>Anexar documentos</h3>
+      <p class="descripcion">
+        Suba un documento PDF, máximo 5 Mb. Los documentos deben seguir el siguiente orden:
+      </p>
+
+      <div class="alerta">
+        <strong>No hay requisitos configurados</strong> para este servicio {{ servicioActual || '—' }} {{ becaActual || '—' }}.
+        <br />
+        Falta instrucción. Por favor, comunícate con <strong>Bienestar Estudiantil</strong> para recibir indicaciones.
+      </div>
+
+      <div class="resumen-seleccion">
+        <strong>Servicio:</strong> {{ servicioActual || '—' }} |
+        <strong>Tipo de beca:</strong> {{ becaActual || '—' }}
+      </div>
+
+      <div class="navegacion">
+        <button type="button" class="btn-atras" (click)="emitirVolverAtras()">⬅ Atrás</button>
+        <!-- Sin botón Finalizar -->
+      </div>
+    </ng-template>
+  </ng-container>
 </div>

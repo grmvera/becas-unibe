@@ -51,7 +51,7 @@ export class RequisitosAnexoComponent implements OnInit {
   filtrados$: Observable<Paquete[]> = new Observable<Paquete[]>();
 
   /** ====== datos para selects ====== */
-  tiposServicios: string[] = ['BECAS', 'AYUDAS ECONÓMICAS', 'GUARDERÍA'];
+  tiposServicios: string[] = ['TIPOS DE BECAS', 'AYUDAS ECONÓMICAS', 'GUARDERÍA'];
   becas: string[] = [
     'Beca por Excelencia Académica',
     'Beca para Deportistas destacados',
@@ -101,7 +101,7 @@ export class RequisitosAnexoComponent implements OnInit {
     // Validación dinámica de tipoBeca
     this.formCrear.get('servicio')?.valueChanges.subscribe((val: string) => {
       const tipoCtrl = this.formCrear.get('tipoBeca');
-      if (val === 'BECAS') {
+      if (val === 'TIPOS DE BECAS') {
         tipoCtrl?.addValidators(Validators.required);
       } else {
         tipoCtrl?.clearValidators();
@@ -127,7 +127,7 @@ export class RequisitosAnexoComponent implements OnInit {
     this.resetForm();
     this.formCrear.patchValue({
       servicio: p.servicio || '',
-      tipoBeca: p.servicio === 'BECAS' ? (p.tipoBeca ?? '') : '',
+      tipoBeca: p.servicio === 'TIPOS DE BECAS' ? (p.tipoBeca ?? '') : '',
     });
 
     this.requisitosFA.clear();
@@ -180,10 +180,10 @@ export class RequisitosAnexoComponent implements OnInit {
 
       const payload: Omit<Paquete, 'id'> = {
         servicio,
-        tipoBeca: servicio === 'BECAS' ? tipoBeca : null,
+        tipoBeca: servicio === 'TIPOS DE BECAS' ? tipoBeca : null,
         requisitos,
         estado: true,
-        nombre: servicio === 'BECAS' && tipoBeca ? tipoBeca : servicio,
+        nombre: servicio === 'TIPOS DE BECAS' && tipoBeca ? tipoBeca : servicio,
       };
 
       const colRef = collection(this.firestore, 'requisitos_anexo');

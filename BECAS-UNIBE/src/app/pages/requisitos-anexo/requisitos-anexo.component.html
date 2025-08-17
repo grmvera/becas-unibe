@@ -70,8 +70,8 @@
                 <option *ngFor="let s of tiposServicios" [value]="s">{{ s }}</option>
             </select>
 
-            <!-- Tipo de beca (solo si servicio === 'BECAS') -->
-            <div class="ra-beca" *ngIf="formCrear.value.servicio === 'BECAS'">
+            <!-- Tipo de beca (solo si servicio === 'TIPOS DE BECAS') -->
+            <div class="ra-beca" *ngIf="formCrear.value.servicio === 'TIPOS DE BECAS'">
                 <label class="ra-label">Tipo de beca</label>
                 <select class="ra-select" formControlName="tipoBeca">
                     <option value="" disabled selected>Seleccione una beca…</option>
