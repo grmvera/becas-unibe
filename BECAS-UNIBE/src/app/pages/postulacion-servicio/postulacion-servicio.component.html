@@ -1,1 +1,109 @@
-<p>postulacion-servicio works!</p>
+<div *ngIf="periodoActivo; else noPeriodo" class="contenedor">
+  <h2>Postulación por Beca</h2>
+
+  <!-- Tabs (solo TIPOS DE BECAS para mantener coherencia visual) -->
+  <div class="menu-servicios">
+    <div
+      class="opcion activo"
+      (click)="$event.preventDefault()"
+      title="Solo disponible: Tipos de Becas"
+    >
+      TIPOS DE BECAS
+    </div>
+  </div>
+
+  <!-- Subopciones de becas (solo 2) -->
+  <div class="subopciones">
+    <div
+      class="subopcion"
+      *ngFor="let beca of becas; trackBy: trackByCat"
+      [ngClass]="{ 'activo': becaSeleccionada === beca }"
+      (click)="seleccionarBeca(beca)"
+    >
+      {{ beca }}
+    </div>
+  </div>
+
+  <!-- Selección de estudiante (rol=student) -->
+  <div class="student-select" *ngIf="becaSeleccionada">
+    <label for="studentSel">Estudiante</label>
+    <select
+      id="studentSel"
+      [ngModel]="selectedStudentUid"
+      (ngModelChange)="onStudentChange($event)"
+    >
+      <option value="">— Selecciona estudiante —</option>
+      <option
+        *ngFor="let u of (students$ | async); trackBy: trackByStudent"
+        [value]="u.uid"
+      >
+        {{ (u.apellidos || '') + ' ' + (u.nombres || '') }} —
+        {{ u.cedula || 's/n' }} —
+        {{ u.correo || u.email }}
+      </option>
+    </select>
+    <div class="muted" *ngIf="loadingStudents">Cargando estudiantes…</div>
+  </div>
+
+  <!-- Aviso si falta selección -->
+  <div class="callout" *ngIf="!puedeMostrarFormulario">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-body">
+      <strong>Selecciona para continuar</strong>
+      <div class="callout-text">Elige una beca y un estudiante para habilitar el formulario.</div>
+    </div>
+  </div>
+
+  <!-- Línea divisoria cuando ya se puede mostrar el formulario -->
+  <div class="divider" *ngIf="puedeMostrarFormulario">
+    <span>{{ becaSeleccionada }} — formulario</span>
+  </div>
+
+  <!-- ====== Flujo de formularios ====== -->
+  <ng-container *ngIf="puedeMostrarFormulario">
+    <!-- 1) Datos personales -->
+    <app-datos-personales
+      *ngIf="etapaFormulario === 1"
+      [form]="datosPersonalesForm"
+      (pasoCompletado)="avanzarGrupoFamiliar($event)"
+    ></app-datos-personales>
+
+    <!-- 2) Grupo familiar -->
+    <app-datos-grupo-familiar
+      *ngIf="etapaFormulario === 2"
+      [form]="grupoFamiliarForm"
+      (volverAtras)="regresarADatosPersonales()"
+      (avanzarSocioeconomico)="avanzarDatosSocioeconomico($event)"
+    ></app-datos-grupo-familiar>
+
+    <!-- 3) Socioeconómico -->
+    <app-datos-socioeconomico
+      *ngIf="etapaFormulario === 3"
+      [form]="socioeconomicoForm"
+      (volverAtras)="etapaFormulario = 2"
+      (avanzarSalud)="avanzarDatosSalud($event)"
+    ></app-datos-socioeconomico>
+
+    <!-- 4) Salud -->
+    <app-dato-salud
+      *ngIf="etapaFormulario === 4"
+      [form]="datosSaludForm"
+      (volverAtras)="etapaFormulario = 3"
+      (avanzarAnexoCarnet)="avanzarDatosAnexoCarnet($event)"
+    ></app-dato-salud>
+
+    <!-- 5) Anexos (carnet/reqs) -->
+    <app-anexo-carnet
+      *ngIf="etapaFormulario === 5"
+      [form]="anexoCarnetForm"
+      (volverAtras)="etapaFormulario = 4"
+      (finalizar)="enviarFormularioFinal($event)"
+    ></app-anexo-carnet>
+  </ng-container>
+</div>
+
+<ng-template #noPeriodo>
+  <div class="sin-periodo">
+    <p>⚠️ No hay un periodo activo actualmente.</p>
+  </div>
+</ng-template>
