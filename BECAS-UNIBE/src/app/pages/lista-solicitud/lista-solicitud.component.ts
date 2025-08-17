@@ -46,15 +46,11 @@ export class ListaSolicitudComponent implements OnInit {
       switchMap((postulaciones: any[]) => {
         const solicitudesConUsuario = postulaciones.map(async (p) => {
           // datos del usuario
-          const uid = p.datosPersonales?.uid;
+          const uid = p.datosPersonales?.uid || p.uid;
           const userRef = doc(this.firestore, `usuarios/${uid}`);
           const userSnap = await getDoc(userRef);
           const userData = userSnap.exists() ? userSnap.data() : {};
 
-          const id = p.uid;
-          const userGuarderiaRef = doc(this.firestore, `usuarios/${id}`);
-          const userGuarderiaSnap = await getDoc(userGuarderiaRef);
-          const userGuarderiaData = userGuarderiaSnap.exists() ? userGuarderiaSnap.data() : {};
           // periodo
           const periodoId = p.periodoId;
           const periodoRef = doc(this.firestore, `periodos/${periodoId}`);
@@ -63,7 +59,7 @@ export class ListaSolicitudComponent implements OnInit {
 
           return {
             id: p.id,
-            cedulaUsuario: userData['cedula'] || userGuarderiaData['cedula'] || 'Cédula no encontrada',
+            cedulaUsuario: userData['cedula'] || 'Cédula no encontrada',
             nombreUsuario: userData['nombres' ] + ' ' + userData['apellidos'] || 'Nombre no encontrado',
             correoUsuario: userData['correo'] || 'Correo no encontrado',
             descipcion: p.datosSalud?.justificacion || 'No posee justificación encontrado',

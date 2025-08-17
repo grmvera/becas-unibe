@@ -260,12 +260,27 @@ export class TipoServicioComponent {
     }
   }
 
+  /** Copia la selección actual al formulario de datos personales, justo antes de guardar */
+  private syncSeleccionEnDatosPersonales(): void {
+    const tipoServicio = this.servicioSeleccionado ?? '';
+    const tipoBeca = this.servicioSeleccionado === 'TIPOS DE BECAS' ? (this.becaSeleccionada ?? '') : '';
+
+    this.datosPersonalesForm.patchValue({
+      tipoServicio,
+      tipoBeca
+    });
+  }
+
+
+
   // -------- Navegación / Selección ----------
   seleccionarServicio(servicio: string) {
     this.servicioSeleccionado = this.servicioSeleccionado === servicio ? null : servicio;
     this.becaSeleccionada = null;
     this.selState.setServicio(this.servicioSeleccionado);
     this.selState.setBeca(null);
+    // opcional: reflejar en el form
+    this.datosPersonalesForm.patchValue({ tipoServicio: this.servicioSeleccionado ?? '', tipoBeca: '' });
     this.etapaFormulario = 1;
   }
 
@@ -273,8 +288,11 @@ export class TipoServicioComponent {
     this.becaSeleccionada = beca;
     this.selState.setBeca(beca);
     if (!this.selState.servicioActual) this.selState.setServicio(this.servicioSeleccionado ?? null);
+    // opcional: reflejar en el form
+    this.datosPersonalesForm.patchValue({ tipoBeca: this.becaSeleccionada ?? '' });
     this.etapaFormulario = 1;
   }
+
 
   // -------- Avances entre pasos (becas/ayudas) ----------
   avanzarGrupoFamiliar(datos: any) {
@@ -345,11 +363,14 @@ export class TipoServicioComponent {
   enviarFormularioFinal(datos: any) {
     if (this.enviandoFormulario) return;
 
+    // <-- NUEVO: asegura que tipoServicio y tipoBeca viajen en datosPersonales
+    this.syncSeleccionEnDatosPersonales();
+
     // $event viene desde AnexoCarnet => parchar al form correcto
     this.anexoCarnetForm.patchValue(datos ?? {});
 
     const formularioCompleto = {
-      datosPersonales: this.datosPersonalesForm.value,
+      datosPersonales: this.datosPersonalesForm.value,   // <-- ahora incluye tipoServicio y tipoBeca
       grupoFamiliar: this.grupoFamiliarForm.value,
       datosSocioeconomicos: this.socioeconomicoForm.value,
       datosSalud: this.datosSaludForm.value,
@@ -378,6 +399,7 @@ export class TipoServicioComponent {
         this.enviandoFormulario = false;
       });
   }
+
 
   regresarADatosPersonales() {
     this.etapaFormulario = 1;
