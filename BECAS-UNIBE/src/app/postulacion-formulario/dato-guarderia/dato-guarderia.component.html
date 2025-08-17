@@ -1,34 +1,52 @@
 <div class="guarderia-container">
-  <h2>Requisitos para postulación a Guardería</h2>
-  <p>
-    Para postular, sube un único PDF que contenga TODOS los requisitos en el orden indicado:
-  </p>
-  <ol>
-    <li>Certificado de matriculación del niño en la guardería</li>
-    <li>Comprobante de asistencia del niño</li>
-    <li>Comprobante de pago por servicios</li>
-    <li>Copia de cédula del padre o madre</li>
-    <li>Partida de nacimiento del niño</li>
-    <li>Certificado “Detección de Conductas Adictivas”</li>
-    <li>Certificado “Ética y Felicidad”</li>
-  </ol>
+  <!-- Requisitos dinámicos -->
+  <ng-container *ngIf="(requisitos$ | async) as reqs">
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="file-input">
-      <label for="archivo">Suba su PDF:</label>
-      <input
-        type="file"
-        id="archivo"
-        (change)="onFileChange($event)"
-        accept="application/pdf"
-      />
-      <div *ngIf="form.get('archivo')?.invalid && form.get('archivo')?.touched" class="error">
-        Debes elegir un archivo
+    <!-- CUANDO HAY REQUISITOS: mostrar el formulario -->
+    <ng-container *ngIf="reqs.length > 0; else sinRequisitos">
+      <h2>Requisitos para postulación a Guardería</h2>
+      <p>Para postular, sube un único PDF que contenga TODOS los requisitos en el orden indicado:</p>
+
+      <ol class="lista-requisitos">
+        <li *ngFor="let r of reqs">{{ r }}</li>
+      </ol>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="file-input">
+          <label for="archivo">Sube tu PDF con todos los requisitos:</label>
+          <input
+            type="file"
+            id="archivo"
+            (change)="onFileChange($event)"
+            accept="application/pdf"
+            [disabled]="!puedeSubir"
+          />
+        </div>
+
+        <div class="resumen-seleccion">
+          <strong>Servicio:</strong> {{ servicioActual || '—' }}
+          <ng-container *ngIf="becaActual">&nbsp;|&nbsp;<strong>Tipo de beca:</strong> {{ becaActual }}</ng-container>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" class="btn-enviar" [disabled]="!puedeFinalizar">Finalizar</button>
+        </div>
+      </form>
+    </ng-container>
+
+    <!-- CUANDO NO HAY REQUISITOS: ocultar el form y mostrar aviso -->
+    <ng-template #sinRequisitos>
+      <h2>Requisitos para postulación a Guardería</h2>
+      <div class="alerta">
+        <strong>No hay requisitos configurados</strong> para este servicio {{ servicioActual || '—' }}.
+        <br />
+        Falta instrucción. Por favor, comunícate con <strong>Bienestar Estudiantil</strong> para recibir indicaciones.
       </div>
-    </div>
 
-    <button mat-button color="primary" type="submit" [disabled]="form.invalid">
-      Enviar
-    </button>
-  </form>
+      <div class="resumen-seleccion">
+        <strong>Servicio:</strong> {{ servicioActual || '—' }}
+        <ng-container *ngIf="becaActual">&nbsp;|&nbsp;<strong>Tipo de beca:</strong> {{ becaActual }}</ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
 </div>
