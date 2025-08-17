@@ -94,6 +94,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] }
       },
+      {
+        path: 'requisitos-anexo',
+        loadComponent: () =>
+          import('./pages/requisitos-anexo/requisitos-anexo.component').then(
+            (m) => m.RequisitosAnexoComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 

@@ -19,6 +19,7 @@ import {
   addDoc, collection, doc, Firestore, getDoc, getDocs, query, where
 } from '@angular/fire/firestore';
 import { ref, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
+import { SeleccionStateService } from '../../../core/services/seleccion-state.service';
 
 @Component({
   selector: 'app-tipo-servicio',
@@ -151,6 +152,7 @@ export class TipoServicioComponent {
   };
 
   constructor(
+    private selState: SeleccionStateService,
     private fb: FormBuilder,
     private auth: Auth,
     private postulacionService: PostulacionService,
@@ -262,14 +264,15 @@ export class TipoServicioComponent {
   seleccionarServicio(servicio: string) {
     this.servicioSeleccionado = this.servicioSeleccionado === servicio ? null : servicio;
     this.becaSeleccionada = null;
+    this.selState.setServicio(this.servicioSeleccionado);
+    this.selState.setBeca(null);
     this.etapaFormulario = 1;
-    this.datosPersonalesForm.get('tipoServicio')?.setValue(this.servicioSeleccionado);
-    this.datosPersonalesForm.get('tipoBeca')?.setValue(null);
   }
 
   seleccionarBeca(beca: string) {
     this.becaSeleccionada = beca;
-    this.datosPersonalesForm.get('tipoBeca')?.setValue(this.becaSeleccionada);
+    this.selState.setBeca(beca);
+    if (!this.selState.servicioActual) this.selState.setServicio(this.servicioSeleccionado ?? null);
     this.etapaFormulario = 1;
   }
 

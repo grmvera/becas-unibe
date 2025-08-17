@@ -1,0 +1,506 @@
+/* ===== Base ===== */
+:host {
+    display: block;
+    max-width: 100%;
+    overflow-x: hidden
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    background: #f7f9fc;
+    color: #0f172a;
+    font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ===== Página ===== */
+.ra-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px
+}
+
+.ra-header h1 {
+    margin: 0 0 6px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    font-size: clamp(24px, 3vw, 32px)
+}
+
+.ra-sub {
+    margin: 0;
+    color: #64748b
+}
+
+/* ===== Toolbar ===== */
+.ra-toolbar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 18px 0 16px
+}
+
+/* Buscar */
+.ra-search {
+    position: relative;
+    flex: 1 1 340px;
+    min-width: 260px
+}
+
+.ra-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    opacity: .85
+}
+
+.ra-search input {
+    width: 100%;
+    padding: 12px 14px 12px 38px;
+    border: 1px solid #e2e8f0;
+    background: #f8fbff;
+    color: #0f172a;
+    border-radius: 12px;
+    outline: none;
+    transition: border .2s, box-shadow .2s, background .2s
+}
+
+.ra-search input::placeholder {
+    color: #64748b
+}
+
+.ra-search input:focus {
+    border-color: #0f52ba;
+    box-shadow: 0 0 0 3px rgba(19, 99, 223, .15)
+}
+
+/* ===== Botones ===== */
+.ra-btn {
+    appearance: none;
+    border: 1px solid #cbd5e1;
+    background: #f8fbff;
+    color: #0f172a;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform .04s, box-shadow .2s, border .2s, background .2s, color .2s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .03)
+}
+
+.ra-btn:active {
+    transform: translateY(1px)
+}
+
+.ra-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed
+}
+
+/* CTA con gradiente azul */
+.ra-btn-success {
+    background: linear-gradient(90deg, #1363df 0%, #0f52ba 100%);
+    border-color: rgba(19, 99, 223, .35);
+    color: #f0f6ff;
+    box-shadow: 0 8px 18px rgba(19, 99, 223, .15)
+}
+
+.ra-btn-success:hover {
+    filter: brightness(1.03)
+}
+
+.ra-btn-outline {
+    background: transparent;
+    color: #0f172a;
+    border-color: #cbd5e1
+}
+
+.ra-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: #64748b
+}
+
+.ra-link {
+    border: none;
+    background: transparent;
+    color: #0f52ba;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0
+}
+
+/* Icon buttons */
+.ra-icon-btn {
+    border: 1px solid #cbd5e1;
+    background: #f8fbff;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: inline-grid;
+    place-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .2s, border .2s, transform .04s
+}
+
+.ra-icon-btn:hover {
+    background: #f0f6ff
+}
+
+.ra-icon-btn:active {
+    transform: translateY(1px)
+}
+
+.ra-icon-btn.ra-danger {
+    border-color: #fecaca;
+    color: #b42318;
+    background: #fee2e2
+}
+
+/* ===== Card contenedora ===== */
+.ra-card {
+    background: #f8fbff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(2, 6, 23, .06);
+    overflow: hidden
+}
+
+/* ===== Tabla ===== */
+.ra-table-responsive {
+    width: 100%;
+    overflow: auto
+}
+
+.ra-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 640px
+}
+
+.ra-table thead th {
+    text-align: left;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .3px;
+    color: #334155;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+    border-bottom: 1px solid #cbd5e1;
+    padding: 14px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1
+}
+
+.ra-table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    background: #f8fbff
+}
+
+.ra-row:hover td {
+    background: #f0f6ff
+}
+
+.ra-table tr:last-child td {
+    border-bottom: none
+}
+
+/* Columnas */
+.col-estado {
+    width: 160px
+}
+
+.col-acciones {
+    width: 160px;
+    text-wrap: nowrap
+}
+
+/* Pills de estado */
+.ra-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid #bfd3ff;
+    background: #e6f0ff;
+    color: #0f52ba
+}
+
+.ra-pill.nok {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #b42318
+}
+
+/* Vacío */
+.ra-empty {
+    text-align: center;
+    color: #64748b;
+    padding: 26px 16px
+}
+
+/* Interactivo para el pill de estado */
+.ra-pill--click { cursor: pointer; user-select: none; }
+.ra-pill--click:hover { filter: brightness(1.03); }
+.ra-pill.ra-busy { opacity: .6; pointer-events: none; }
+
+
+/* =================================================================== */
+/* =====================  MODAL UNIFICADO  =========================== */
+/* =================================================================== */
+
+/* Backdrop */
+.ra-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, .45);
+    backdrop-filter: blur(2px);
+    z-index: 50
+}
+
+/* El modal es UNA sola tarjeta */
+.ra-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(700px, calc(100% - 32px));
+    max-height: min(84vh, 760px);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    /* header | body (scroll) | footer */
+    background: #f8fbff;
+    border: 1px solid #cbd5e1;
+    border-radius: 18px;
+    box-shadow: 0 10px 22px rgba(2, 6, 23, .10);
+    overflow: hidden;
+    z-index: 60;
+    padding: 0;
+}
+
+/* Por si había estilos anteriores de hijos tipo “tarjeta” */
+.ra-modal>* {
+    width: auto;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+/* Header */
+.ra-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #f8fbff 0%, #eef5ff 100%)
+}
+
+.ra-modal-header h2 {
+    margin: 0;
+    font-size: clamp(18px, 2.2vw, 22px);
+    font-weight: 800;
+    color: #0f2a5f
+}
+
+.ra-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 20px;
+    line-height: 1
+}
+
+.ra-close:disabled {
+    opacity: .6;
+    cursor: not-allowed
+}
+
+/* Body (con scroll interno) */
+.ra-modal-body {
+    padding: 16px 18px;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    overflow: auto;
+}
+
+.ra-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #475569
+}
+
+.ra-input,
+.ra-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fbff;
+    color: #0f172a;
+    border-radius: 10px;
+    outline: none;
+    transition: border .2s, box-shadow .2s
+}
+
+.ra-input:focus,
+.ra-select:focus {
+    border-color: #0f52ba;
+    box-shadow: 0 0 0 3px rgba(19, 99, 223, .15)
+}
+
+.ra-beca {
+    grid-column: 1 / -1
+}
+
+/* Lista de requisitos dentro del modal */
+.ra-req-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding: 10px 12px;
+    background: #f0f6ff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-weight: 700
+}
+
+.ra-req-list {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 10px
+}
+
+.ra-req-item {
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
+.ra-req-item .ra-input {
+    flex: 1;
+    min-width: 120px
+}
+
+/* Footer pegado abajo */
+.ra-modal-footer {
+    padding: 14px 18px;
+    border-top: 1px solid #e2e8f0;
+    background: #f7f9fc;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end
+}
+
+/* ===== Responsive ===== */
+@media (max-width:700px) {
+    .ra-modal {
+        width: calc(100% - 20px);
+        max-height: calc(100dvh - 20px);
+        border-radius: 16px
+    }
+
+    .ra-modal-body {
+        grid-template-columns: 1fr
+    }
+}
+
+@media (max-width:640px) {
+    .ra-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px
+    }
+
+    .col-acciones {
+        width: 130px
+    }
+
+    /* Tabla -> tarjetas móviles */
+    .ra-table {
+        min-width: 0;
+        border-collapse: separate;
+        border-spacing: 0 10px
+    }
+
+    .ra-table thead {
+        display: none
+    }
+
+    .ra-table tbody {
+        display: block;
+        padding: 10px
+    }
+
+    .ra-table tr {
+        display: grid;
+        grid-template-columns: 1fr;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f8fbff;
+        box-shadow: 0 6px 16px rgba(2, 6, 23, .06);
+        margin-bottom: 10px
+    }
+
+    .ra-table td {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px dashed #e2e8f0
+    }
+
+    .ra-table td:last-child {
+        border-bottom: none
+    }
+
+    .ra-table td::before {
+        content: attr(data-label);
+        font-weight: 800;
+        color: #111827;
+        padding-left: 6px
+    }
+
+    .col-acciones {
+        display: flex !important;
+        gap: 8px;
+        justify-content: flex-start;
+        padding: 12px 16px
+    }
+}
+
+/* ===== Accesibilidad y movimiento ===== */
+.ra-btn:focus-visible,
+.ra-icon-btn:focus-visible,
+.ra-link:focus-visible,
+.ra-input:focus-visible,
+.ra-select:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(19, 99, 223, .18)
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important
+    }
+}

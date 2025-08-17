@@ -1,0 +1,105 @@
+<div class="ra-page">
+    <header class="ra-header">
+        <h1>Requisitos para Anexo de postulación</h1>
+        <p class="ra-sub">Gestiona los paquetes de requisitos disponibles.</p>
+    </header>
+
+    <section class="ra-toolbar">
+        <div class="ra-search">
+            <span class="ra-search-icon">🔎</span>
+            <input type="text" [formControl]="search" placeholder="Buscar por nombre…" />
+        </div>
+
+        <button class="ra-btn ra-btn-success" type="button" (click)="crear()">
+            <span class="ra-plus">＋</span> Crear requisitos
+        </button>
+    </section>
+
+    <section class="ra-card">
+        <div class="ra-table-responsive">
+            <table class="ra-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th class="col-estado">Estado</th>
+                        <th class="col-acciones">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of (filtrados$ | async); trackBy: trackById" class="ra-row">
+                        <td data-label="Nombre">{{ p.nombre }}</td>
+                        <td class="col-estado" data-label="Estado">
+                            <span class="ra-pill ra-pill--click" [class.ok]="p.estado" [class.nok]="!p.estado"
+                                [class.ra-busy]="p.id && cargandoEstado.has(p.id!)" role="button" tabindex="0"
+                                title="Cambiar estado" [attr.aria-pressed]="p.estado" (click)="toggleEstado(p)"
+                                (keydown.enter)="toggleEstado(p)" (keydown.space)="toggleEstado(p)">
+                                {{ p.estado ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+
+                        <td class="col-acciones" data-label="Acciones">
+                            <button class="ra-icon-btn" title="Editar" (click)="editar(p)">✏️</button>
+                            <button class="ra-icon-btn ra-danger" title="Borrar" (click)="borrar(p)">🗑️</button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="(filtrados$ | async) as rows" [hidden]="rows.length">
+                        <td colspan="3" class="ra-empty">
+                            No hay resultados.
+                            <button class="ra-link" (click)="crear()">Crear el primero</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ========= MODAL (crear/editar) ========= -->
+    <div class="ra-modal-backdrop" *ngIf="modalAbierto" (click)="cerrarModal()"></div>
+    <div class="ra-modal" *ngIf="modalAbierto" role="dialog" aria-modal="true">
+        <div class="ra-modal-header">
+            <h2>{{ editando ? 'Editar requisitos' : 'Crear requisitos' }}</h2>
+            <button class="ra-close" (click)="cerrarModal()" [disabled]="guardando">✕</button>
+        </div>
+
+        <div class="ra-modal-body" [formGroup]="formCrear">
+            <!-- Servicio -->
+            <label class="ra-label">Servicio</label>
+            <select class="ra-select" formControlName="servicio">
+                <option value="" disabled selected>Seleccione un servicio…</option>
+                <option *ngFor="let s of tiposServicios" [value]="s">{{ s }}</option>
+            </select>
+
+            <!-- Tipo de beca (solo si servicio === 'TIPOS DE BECAS') -->
+            <div class="ra-beca" *ngIf="formCrear.value.servicio === 'TIPOS DE BECAS'">
+                <label class="ra-label">Tipo de beca</label>
+                <select class="ra-select" formControlName="tipoBeca">
+                    <option value="" disabled selected>Seleccione una beca…</option>
+                    <option *ngFor="let b of becas" [value]="b">{{ b }}</option>
+                </select>
+            </div>
+
+            <!-- Requisitos -->
+            <div class="ra-req-header">
+                <span>Cree los requisitos necesarios</span>
+                <button type="button" class="ra-btn ra-btn-outline" (click)="agregarRequisito()">+ Más</button>
+            </div>
+
+            <div class="ra-req-list">
+                <div class="ra-req-item" *ngFor="let ctrl of requisitosFA.controls; let i = index">
+                    <input class="ra-input" type="text" [formControl]="ctrl" placeholder="Escribe un requisito…" />
+                    <button class="ra-icon-btn ra-danger" type="button" (click)="quitarRequisito(i)"
+                        [disabled]="requisitosFA.length === 1">🗑️</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ra-modal-footer">
+            <button class="ra-btn ra-btn-ghost" type="button" (click)="cerrarModal()"
+                [disabled]="guardando">Cancelar</button>
+            <button class="ra-btn ra-btn-success" type="button" (click)="guardarNuevo()" [disabled]="guardando">
+                {{ editando ? 'Guardar cambios' : 'Guardar' }}
+            </button>
+        </div>
+    </div>
+</div>
