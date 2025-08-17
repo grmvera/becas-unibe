@@ -1,0 +1,75 @@
+:host { display: block; max-width: 100%; overflow-x: hidden; }
+
+/* Contenedor y tipografía */
+.contenedor {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 20px;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+.contenedor * { box-sizing: border-box; }
+h2 { font-size: clamp(24px, 3vw, 32px); margin: 0 0 12px; font-weight: 800; }
+
+/* Tabs superiores (dejamos solo "TIPOS DE BECAS") */
+.menu-servicios {
+  display: flex; gap: 24px; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto; padding-bottom: 4px; min-width: 0;
+}
+.opcion { position: relative; font-weight: 700; padding: 12px 2px; color: #0f52ba; }
+.opcion.activo::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, #1363df 0%, #0f52ba 100%);
+}
+
+/* Tarjetas de subopción (becas) */
+.subopciones {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px; margin-top: 14px; min-width: 0;
+}
+.subopcion {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px 16px;
+  cursor: pointer; font-weight: 600; color: #0f172a;
+  box-shadow: 0 6px 16px rgba(2, 6, 23, .06);
+  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+  display: flex; align-items: center; justify-content: space-between; min-height: 56px;
+}
+.subopcion::after { content: "›"; font-size: 18px; color: #64748b; opacity: .8; }
+.subopcion:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(2, 6, 23, .10); }
+.subopcion.activo { border-color: #1363df; box-shadow: 0 8px 18px rgba(19, 99, 223, .15); }
+
+/* Selección de estudiante */
+.student-select { margin: 16px 0 8px; display: grid; gap: 8px; max-width: 680px; }
+.student-select label { font-weight: 700; color: #0f2a5f; }
+.student-select select {
+  appearance: none; width: 100%; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid #d1d5db; background: #fff; font-size: 0.95rem;
+}
+.muted { color: #6b7280; font-size: .9rem; }
+
+/* Callout y divisor */
+.callout {
+  display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 8px; padding: 12px 14px;
+  background: #f7f9ff; border: 1px dashed #bcd3ff; border-radius: 12px;
+}
+.callout-icon { font-size: 18px; line-height: 1; margin-top: 2px; }
+.callout-body { display: grid; gap: 4px; }
+.callout-text { color: #374151; }
+
+.divider { display: flex; align-items: center; gap: 12px; margin: 18px 0 22px; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg,#e5e7eb 0%,#cbd5e1 100%); }
+.divider span {
+  font-weight: 700; font-size: .9rem; color: #111827; background: #fff; padding: 4px 10px;
+  border-radius: 999px; border: 1px solid #e2e8f0; max-width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Sin período */
+.sin-periodo { text-align: center; margin-top: 40px; font-size: 16px; color: #b42318; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .subopciones { grid-template-columns: 1fr; }
+  .divider span { max-width: 100%; }
+}
