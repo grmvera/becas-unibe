@@ -102,6 +102,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] }
       },
+        {
+        path: 'postulacion-servicio',
+        loadComponent: () =>
+          import('./pages/postulacion-servicio/postulacion-servicio.component').then(
+            (m) => m.PostulacionServicioComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 
