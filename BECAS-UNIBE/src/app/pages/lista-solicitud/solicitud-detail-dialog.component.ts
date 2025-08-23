@@ -7,13 +7,10 @@ import {
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
-// Si ya tienes MatButtonModule en tu app, lo puedes importar aquí.
-// import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   standalone: true,
   selector: 'app-solicitud-detail-dialog',
-  // Si usas MatButtonModule, agrégalo también en imports
   imports: [CommonModule, MatDialogModule, FormsModule],
   template: `
     <h2 mat-dialog-title class="dialog-title">
@@ -70,6 +67,25 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
             <div class="value pre">
               {{ data.descipcion || data.descripcion || '—' }}
             </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- PUNTUACION -->
+      <section class="section-card">
+        <h3 class="section-title">Puntuación</h3>
+
+        <div class="details-grid">
+          <div class="detail">
+            <label>Puntuacion</label>
+            <!-- SOLO CAMBIO: texto directo -->
+            <div class="value" [textContent]="displayTotal"></div>
+          </div>
+
+          <div class="detail">
+            <label>Beca %</label>
+            <!-- SOLO CAMBIO: texto directo -->
+            <div class="value" [textContent]="displayPct"></div>
           </div>
         </div>
       </section>
@@ -138,6 +154,7 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
       </button>
     </mat-dialog-actions>
   `,
+
   styles: [`
     /* Ensancha el panel del diálogo (horizontal de verdad) */
     :host ::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
@@ -165,243 +182,60 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .04em;
-      background: #eef2ff;       /* azul suave */
+      background: #eef2ff;
       color: #3730a3;
       white-space: nowrap;
     }
-    .title-text {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
+    .title-text { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
     .status-pill {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      border: 1px solid #e5e7eb;
-      background: #f8fafc;
-      color: #334155;
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      border: 1px solid #e5e7eb; background: #f8fafc; color: #334155;
     }
-    .status-pill.ok {
-      background: #ecfdf5;
-      color: #065f46;
-      border-color: #a7f3d0;
-    }
-    .status-pill.bad {
-      background: #fef2f2;
-      color: #7f1d1d;
-      border-color: #fecaca;
-    }
-    .status-pill.neutral {
-      background: #f1f5f9;
-      color: #334155;
-      border-color: #e2e8f0;
-    }
+    .status-pill.ok { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+    .status-pill.bad { background: #fef2f2; color: #7f1d1d; border-color: #fecaca; }
+    .status-pill.neutral { background: #f1f5f9; color: #334155; border-color: #e2e8f0; }
 
-    /* ---------- Contenido ---------- */
-    .dialog-content {
-      max-height: 70vh;
-      overflow: auto;
-      padding-bottom: .5rem;
-    }
+    .dialog-content { max-height: 70vh; overflow: auto; padding-bottom: .5rem; }
+    .section-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05); }
+    .section-title { margin: 0 0 12px 0; font-size: .95rem; font-weight: 800; color: #0f172a; }
 
-    .section-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
-    }
-
-    .section-title {
-      margin: 0 0 12px 0;
-      font-size: .95rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    /* GRID responsive para datos: 1 col en móvil, 2-3 en desktop */
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px 16px;
-    }
-
+    .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 16px; }
     .detail {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      align-items: start;
-      gap: 8px;
-      min-width: 0;
-      background: #fafafa;
-      border: 1px dashed #e5e7eb;
-      border-radius: 10px;
-      padding: 10px 12px;
+      display: grid; grid-template-columns: 120px 1fr; align-items: start; gap: 8px; min-width: 0;
+      background: #fafafa; border: 1px dashed #e5e7eb; border-radius: 10px; padding: 10px 12px;
     }
+    .detail.full { grid-column: 1 / -1; }
+    .detail label { font-weight: 700; color: #334155; white-space: nowrap; }
+    .value { color: #0f172a; min-width: 0; word-break: break-word; }
+    .value.pre { white-space: pre-wrap; line-height: 1.45; }
+    .value.email { overflow-wrap: anywhere; }
 
-    .detail.full {
-      grid-column: 1 / -1; /* ocupa todo el ancho */
-    }
+    .files-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .file-chip { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 999px; padding: 8px 12px; }
+    .file-chip.empty { opacity: .7; }
+    .file-label { font-weight: 700; color: #334155; white-space: nowrap; }
+    .file-btn { border: 1px solid #cbd5e1; background: #fff; padding: 6px 10px; border-radius: 999px; cursor: pointer; font-weight: 600; }
+    .file-btn:hover { background: #f1f5f9; }
+    .file-none { color: #64748b; font-style: italic; }
 
-    .detail label {
-      font-weight: 700;
-      color: #334155;
-      white-space: nowrap;
-    }
+    .status-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .radio-pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #e5e7eb; border-radius: 999px; padding: 6px 10px; background: #fff; cursor: pointer; user-select: none; font-weight: 600; color: #334155; }
+    .radio-pill input { accent-color: #2563eb; transform: scale(1.1); }
 
-    .value {
-      color: #0f172a;
-      min-width: 0;
-      word-break: break-word;
-    }
+    .obs-field { display: grid; gap: 6px; }
+    .obs-field label { font-weight: 700; color: #334155; }
+    .obs-field textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: .95rem; min-height: 100px; resize: vertical; background: #fff; }
 
-    .value.pre {
-      white-space: pre-wrap;
-      line-height: 1.45;
-    }
+    .dialog-actions { position: sticky; bottom: 0; background: linear-gradient(180deg, rgba(255,255,255,0.6), #fff 60%); padding-top: 10px; }
+    .btn { padding: 10px 16px; border-radius: 10px; font-weight: 700; border: 1px solid transparent; cursor: pointer; }
+    .btn.ghost { background: #fff; border-color: #cbd5e1; color: #334155; }
+    .btn.ghost:hover { background: #f8fafc; }
+    .btn.primary { background: #2563eb; color: #fff; }
+    .btn.primary[disabled] { opacity: .7; cursor: default; }
+    .btn.primary:hover:not([disabled]) { filter: brightness(0.95); }
 
-    .value.email {
-      overflow-wrap: anywhere;
-    }
-
-    /* ---------- Archivos ---------- */
-    .files-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-    }
-
-    .file-chip {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 999px;
-      padding: 8px 12px;
-    }
-
-    .file-chip.empty {
-      opacity: .7;
-    }
-
-    .file-label {
-      font-weight: 700;
-      color: #334155;
-      white-space: nowrap;
-    }
-
-    .file-btn {
-      border: 1px solid #cbd5e1;
-      background: #fff;
-      padding: 6px 10px;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .file-btn:hover {
-      background: #f1f5f9;
-    }
-
-    .file-none {
-      color: #64748b;
-      font-style: italic;
-    }
-
-    /* ---------- Revisión ---------- */
-    .status-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .radio-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid #e5e7eb;
-      border-radius: 999px;
-      padding: 6px 10px;
-      background: #fff;
-      cursor: pointer;
-      user-select: none;
-      font-weight: 600;
-      color: #334155;
-    }
-    .radio-pill input {
-      accent-color: #2563eb;
-      transform: scale(1.1);
-    }
-
-    .obs-field {
-      display: grid;
-      gap: 6px;
-    }
-    .obs-field label {
-      font-weight: 700;
-      color: #334155;
-    }
-    .obs-field textarea {
-      padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: .95rem;
-      min-height: 100px;
-      resize: vertical;
-      background: #fff;
-    }
-
-    /* ---------- Botones acciones ---------- */
-    .dialog-actions {
-      position: sticky;
-      bottom: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.6), #fff 60%);
-      padding-top: 10px;
-    }
-
-    .btn {
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-    .btn.ghost {
-      background: #fff;
-      border-color: #cbd5e1;
-      color: #334155;
-    }
-    .btn.ghost:hover {
-      background: #f8fafc;
-    }
-    .btn.primary {
-      background: #2563eb;
-      color: #fff;
-    }
-    .btn.primary[disabled] {
-      opacity: .7;
-      cursor: default;
-    }
-    .btn.primary:hover:not([disabled]) {
-      filter: brightness(0.95);
-    }
-
-    /* ---------- Breakpoints finos ---------- */
-    @media (max-width: 840px) {
-      .detail { grid-template-columns: 100px 1fr; }
-      .dialog-content { max-height: 66vh; }
-    }
-    @media (max-width: 620px) {
-      .detail { grid-template-columns: 1fr; }
-      .detail label { white-space: normal; }
-      .title-text { display: none; } /* deja el badge y el estado en móvil */
-    }
+    @media (max-width: 840px) { .detail { grid-template-columns: 100px 1fr; } .dialog-content { max-height: 66vh; } }
+    @media (max-width: 620px) { .detail { grid-template-columns: 1fr; } .detail label { white-space: normal; } .title-text { display: none; } }
   `]
 })
 export class SolicitudDetailDialogComponent {
@@ -409,24 +243,42 @@ export class SolicitudDetailDialogComponent {
   observations!: string;
   saving = false;
 
+  // valores para Puntuación
+  rubrica: any | null = null;
+  scoreTotal: number | null = null;
+
   constructor(
     private dialogRef: MatDialogRef<SolicitudDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private firestore: Firestore
   ) {
-    this.approved     = data.estadoAprobacion;
+    this.approved = data.estadoAprobacion;
     this.observations = data.observaciones || '';
+
+    // llega desde ListaSolicitudComponent como __rubrica
+    this.rubrica = data.__rubrica ?? null;
+    this.scoreTotal = (this.rubrica && typeof this.rubrica.total === 'number')
+      ? this.rubrica.total
+      : (typeof this.data?.__rubrica?.total === 'number' ? this.data.__rubrica.total : null);
+  }
+
+  // Lo muestro como textos ya formateados (sin tocar estilos)
+  get displayTotal(): string {
+    const t = this.scoreTotal;
+    return (t !== null && t !== undefined) ? `${t} / 26` : '—';
+  }
+  get displayPct(): string {
+    const t = this.scoreTotal;
+    return (t !== null && t !== undefined) ? `${Math.round((t / 26) * 100)}%` : '—';
   }
 
   get statusLabel(): string {
     if (this.data?.estadoAprobacion === true) return 'Aprobado';
     if (this.data?.estadoAprobacion === false) return 'Rechazado';
     return 'Sin revisar';
-    }
-
-  close() {
-    this.dialogRef.close();
   }
+
+  close() { this.dialogRef.close(); }
 
   descargaArchivo(url: string) {
     if (!url || url === 'No posee archivos') return;
@@ -439,7 +291,7 @@ export class SolicitudDetailDialogComponent {
       const refDoc = doc(this.firestore, 'postulaciones', this.data.id);
       await updateDoc(refDoc, {
         estadoAprobacion: this.approved,
-        observaciones:     this.observations
+        observaciones: this.observations
       });
       this.dialogRef.close({ estadoAprobacion: this.approved, observaciones: this.observations });
     } catch (err) {
