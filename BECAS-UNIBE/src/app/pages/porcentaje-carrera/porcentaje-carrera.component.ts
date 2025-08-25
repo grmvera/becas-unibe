@@ -1,11 +1,28 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CrearCarreraDialogComponent, CrearCarreraResultado } from './crear-carrera-dialog.component';
 
 @Component({
   selector: 'app-porcentaje-carrera',
-  imports: [],
   templateUrl: './porcentaje-carrera.component.html',
-  styleUrl: './porcentaje-carrera.component.css'
+  styleUrls: ['./porcentaje-carrera.component.css']
 })
 export class PorcentajeCarreraComponent {
 
+  constructor(private dialog: MatDialog) { }
+
+  abrirCrearCarrera() {
+    const ref = this.dialog.open(CrearCarreraDialogComponent, {
+      width: '600px',
+      maxWidth: '100vw',
+      disableClose: true,
+      autoFocus: false,
+
+    });
+
+    ref.afterClosed().subscribe((resultado?: CrearCarreraResultado) => {
+      if (!resultado) return;
+      console.log('Nueva carrera creada:', resultado);
+    });
+  }
 }
