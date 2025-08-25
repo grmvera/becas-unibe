@@ -110,6 +110,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] }
       },
+      {
+        path: 'porcentaje-carrera',
+        loadComponent: () =>
+          import('./pages/porcentaje-carrera/porcentaje-carrera.component').then(
+            (m) => m.PorcentajeCarreraComponent
+          ),
+        data: { roles: ['admin'] }
+      },
     ],
   },
 
