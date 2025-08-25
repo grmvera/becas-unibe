@@ -13,8 +13,8 @@ export class PorcentajeCarreraComponent {
 
   abrirCrearCarrera() {
     const ref = this.dialog.open(CrearCarreraDialogComponent, {
-      width: '600px',
-      maxWidth: '100vw',
+      width: 'auto',
+      maxWidth: '100%',
       disableClose: true,
       autoFocus: false,
 
