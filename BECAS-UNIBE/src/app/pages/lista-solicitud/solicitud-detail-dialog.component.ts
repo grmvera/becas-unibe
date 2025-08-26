@@ -62,6 +62,16 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
             <div class="value">{{ data.fechaSolicitud }}</div>
           </div>
 
+          <div class="detail">
+            <label>Carrera</label>
+            <div class="value">{{ data.carrera || '—' }}</div>
+          </div>
+
+          <div class="detail">
+            <label>Semestre</label>
+            <div class="value">{{ data.semestre || '—' }}</div>
+          </div>
+
           <div class="detail full">
             <label>Justificación</label>
             <div class="value pre">
