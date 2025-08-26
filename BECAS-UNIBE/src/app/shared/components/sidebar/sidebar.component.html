@@ -8,26 +8,26 @@
       <button (click)="navegar('/dashboard')">🏠 Inicio</button>
 
       <!-- Solo para admin -->
+      <!-- Solo para admin -->
       <ng-container *ngIf="usuario?.rol === 'admin'">
         <button (click)="navegar('/usuarios')">👥 Usuarios</button>
-        <button (click)="navegar('/crear-admin')">➕🛡️ Crear Admin</button>
+        <button (click)="navegar('/crear-admin')">🧑‍💼➕ Crear Admin</button>
         <button (click)="navegar('/periodos')">🗓️⚙️ Gestión Periodos</button>
         <button (click)="navegar('/lista-periodos')">📅 Lista de Periodos</button>
-        <button (click)="navegar('/info-publica')">📢 Información Pública</button>
-        <button (click)="navegar('/list-solicitudes')">📋 Lista de Solicitudes</button>
-        <button (click)="navegar('/postulacion-servicio')"> 📋 Postulación a Estudiantes</button>
-        <button (click)="navegar('/requisitos-anexo')">📄 Requisitos Anexo</button>
+        <button (click)="navegar('/info-publica')">🛈 Información Pública</button>
+        <button (click)="navegar('/list-solicitudes')">📝 Lista de Solicitudes</button>
+        <button (click)="navegar('/postulacion-servicio')">🧑‍🎓📝 Postulación a Estudiantes</button>
+        <button (click)="navegar('/requisitos-anexo')">📎 Requisitos Anexo</button>
+        <button (click)="navegar('/porcentaje-carrera')">🎯 Porcentaje de Becas</button>
         <button (click)="navegar('/reporte')">📊 Reportes</button>
       </ng-container>
 
+
       <!-- Solo para estudiante -->
       <ng-container *ngIf="usuario?.rol === 'student'">
-        <button
-          [disabled]="bloqueadoPorSemestre"
-          [class.disabled]="bloqueadoPorSemestre"
+        <button [disabled]="bloqueadoPorSemestre" [class.disabled]="bloqueadoPorSemestre"
           [attr.title]="bloqueadoPorSemestre ? 'Disponible a partir del 2.º semestre' : null"
-          (click)="navegarPostulacion()"
-        >
+          (click)="navegarPostulacion()">
           📝 Postulación a Servicio
         </button>
 

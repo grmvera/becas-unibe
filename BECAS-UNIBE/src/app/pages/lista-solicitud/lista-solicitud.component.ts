@@ -6,6 +6,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { SolicitudDetailDialogComponent } from './solicitud-detail-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-lista-solicitud',
@@ -62,6 +63,8 @@ export class ListaSolicitudComponent implements OnInit {
             cedulaUsuario: (userData as any)['cedula'] || 'Cédula no encontrada',
             nombreUsuario: (((userData as any)['nombres'] || '') + ' ' + ((userData as any)['apellidos'] || '')).trim() || 'Nombre no encontrado',
             correoUsuario: (userData as any)['correo'] || 'Correo no encontrado',
+            carrera: (userData as any)['carrera'] || 'Carrera no encontrada',
+            semestre: (userData as any)['semestre'] || 'Semestre no encontrado',
             descipcion: p.datosSalud?.justificacion || 'No posee justificación encontrado',
             archivosConadis: p.anexoCarnet?.urlConadis || 'No posee archivos',
             archivosRequisitos: p.anexoCarnet?.urlRequisitos || 'No posee archivos',
