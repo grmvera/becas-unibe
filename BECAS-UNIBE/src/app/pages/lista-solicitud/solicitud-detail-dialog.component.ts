@@ -6,7 +6,7 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, limit, query, updateDoc, where } from '@angular/fire/firestore';
 
 @Component({
   standalone: true,
@@ -80,7 +80,26 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
           </div>
         </div>
       </section>
-      
+
+      <!-- NOTAS -->
+      <section class="section-card">
+      <h3 class="section-title">Promedio de notas</h3>
+        <div class="details-grid">
+          <div class="detail full">
+              <div class="radio-list">
+                <label class="radio-row" *ngFor="let op of opcionesPromedioNotas">
+                  <input
+                    type="radio"
+                    name="promedioNotas"
+                    [(ngModel)]="promedioNotas"
+                    [value]="op.value" />
+                  <span class="txt">{{ op.label }}</span>
+                  <span class="tag">(+{{ op.puntos }} pts)</span>
+                </label>
+              </div>
+          </div>
+        </div>
+      </section>
       <!-- PUNTUACION -->
       <section class="section-card">
         <h3 class="section-title">Puntuación</h3>
@@ -244,6 +263,60 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
     .btn.primary[disabled] { opacity: .7; cursor: default; }
     .btn.primary:hover:not([disabled]) { filter: brightness(0.95); }
 
+.radio-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas iguales */
+  gap: 10px 16px;                /* espacio entre filas y columnas */
+}
+
+.radio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.radio-row:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.radio-row input[type="radio"] {
+  accent-color: #2563eb;
+  transform: scale(1.1);
+  margin-right: 8px;
+}
+
+.row-text {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.row-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.row-tag {
+  font-size: .85rem;
+  color: #64748b;
+}
+
+/* opcional: resaltar el seleccionado */
+.radio-row:has(input[type="radio"]:checked) {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 2px rgba(99,102,241,.2);
+}
+
+
+
     @media (max-width: 840px) { .detail { grid-template-columns: 100px 1fr; } .dialog-content { max-height: 66vh; } }
     @media (max-width: 620px) { .detail { grid-template-columns: 1fr; } .detail label { white-space: normal; } .title-text { display: none; } }
   `]
@@ -274,17 +347,23 @@ export class SolicitudDetailDialogComponent {
 
   // Lo muestro como textos ya formateados (sin tocar estilos)
   get displayTotal(): string {
-    const t = this.scoreTotal;
-    return (t !== null && t !== undefined) ? `${t} / 26` : '—';
+    const t = this.finalTotal;
+    return (t != null) ? `${t} / 30` : '—';
   }
+
   get displayPct(): string {
-    const t = this.scoreTotal;
-    return (t !== null && t !== undefined) ? `${Math.round((t / 26) * 100)}%` : '—';
+    const t = this.finalTotal;
+    if (t == null) return '—';
+    const base = 30;                             // máximo de puntos
+    const ratio = Math.max(0, Math.min(1, t / base));
+    const cap = this.maxBecaTope || 0;           // tope por carrera (ej. 10)
+    const pct = Math.round(ratio * cap);         // aplica tope
+    return `${pct}%`;
   }
 
   get statusLabel(): string {
-    if (this.data?.estadoAprobacion === true) return 'Aprobado';
-    if (this.data?.estadoAprobacion === false) return 'Rechazado';
+    if (this.approved === true) return 'Aprobado';
+    if (this.approved === false) return 'Rechazado';
     return 'Sin revisar';
   }
 
@@ -301,7 +380,11 @@ export class SolicitudDetailDialogComponent {
       const refDoc = doc(this.firestore, 'postulaciones', this.data.id);
       await updateDoc(refDoc, {
         estadoAprobacion: this.approved,
-        observaciones: this.observations
+        observaciones: this.observations,
+        promedioNotasValue: this.promedioNotas,
+        promedioNotasPuntos: this.puntosPromedio,
+        becaTopeCarrera: this.maxBecaTope,               // opcional
+        becaCalculadaPct: Number(this.displayPct.replace('%', '')) // opcional
       });
       this.dialogRef.close({ estadoAprobacion: this.approved, observaciones: this.observations });
     } catch (err) {
@@ -309,6 +392,65 @@ export class SolicitudDetailDialogComponent {
       alert('Ocurrió un error al guardar. Inténtalo nuevamente.');
     } finally {
       this.saving = false;
+    }
+  }
+
+
+  // dentro de SolicitudDetailDialogComponent
+
+  // selección y catálogo
+  promedioNotas: '28-30' | '27-27.99' | '25-26.99' | '21-24.99' | null = null;
+  opcionesPromedioNotas = [
+    { value: '28-30' as const, label: '28 a 30', puntos: 4 },
+    { value: '27-27.99' as const, label: '27 a 27,99', puntos: 3 },
+    { value: '25-26.99' as const, label: '25 a 26,99', puntos: 2 },
+    { value: '21-24.99' as const, label: '21 a 24,99', puntos: 1 },
+  ];
+
+  // si ya te llega algo guardado en el doc, lo puedes precargar
+  async ngOnInit(): Promise<void> {
+    // precarga selección de promedio si existe
+    if (this.data?.promedioNotasValue) {
+      this.promedioNotas = this.data.promedioNotasValue;
+    }
+    // carga tope de beca por carrera
+    await this.cargarTopeBecaPorCarrera();
+  }
+
+  // aporte en puntos (0–4)
+  get puntosPromedio(): number {
+    const op = this.opcionesPromedioNotas.find(o => o.value === this.promedioNotas);
+    return op ? op.puntos : 0;
+  }
+
+  // Total mostrado = rúbrica base + aporte de promedio
+  get finalTotal(): number | null {
+    if (this.scoreTotal == null) return null;
+    return this.scoreTotal + this.puntosPromedio;
+  }
+
+
+  maxBecaTope: number = 0; // tope (%) por carrera
+
+  private async cargarTopeBecaPorCarrera(): Promise<void> {
+    try {
+      const carrera = (this.data?.carrera || '').trim();
+      if (!carrera) { this.maxBecaTope = 0; return; }
+
+      const col = collection(this.firestore, 'porcentajes_carrera');
+      const q = query(
+        col,
+        where('carreraNombre', '==', carrera),
+        where('estado', '==', true),
+        limit(1)
+      );
+      const snap = await getDocs(q);
+
+      this.maxBecaTope = !snap.empty
+        ? Number(snap.docs[0].data()['porcentaje']) || 0
+        : 0;
+    } catch {
+      this.maxBecaTope = 0;
     }
   }
 }

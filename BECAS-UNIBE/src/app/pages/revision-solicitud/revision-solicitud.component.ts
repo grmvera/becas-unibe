@@ -72,7 +72,8 @@ export class RevisionSolicitudComponent implements OnInit {
             tipoServicio: p.datosPersonales?.tipoServicio || p.tipoServicio ||'tipo de servicio no especificado',
             fechaSolicitud: this.formatearFecha(p.fechaEnvio),
             estadoAprobacion: p.estadoAprobacion,
-            observaciones: p.observaciones || 'Aun no tienes observaciones'
+            observaciones: p.observaciones || 'Aun no tienes observaciones',
+            porcentajeAprobado: p.becaCalculadaPct || 0
           };
         });
 
@@ -98,7 +99,8 @@ export class RevisionSolicitudComponent implements OnInit {
 
   openDialog(solicitud: any) {
       this.dialog.open(SolicitudRevicionDetailDialogComponent, {
-        width: '400px',
+        width: '700px',
+        maxWidth: '95vw',
         data: solicitud
       });
     }

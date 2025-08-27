@@ -101,6 +101,12 @@ import { FormsModule } from '@angular/forms';
               {{ statusLabel }}
             </div>
           </div>
+          <div class="detail">
+            <label>Beca Aceptada</label>
+            <div class="value">
+              {{ data.porcentajeAprobado }}%
+            </div>
+          </div>
 
           <div class="detail full">
             <label>Observaciones</label>

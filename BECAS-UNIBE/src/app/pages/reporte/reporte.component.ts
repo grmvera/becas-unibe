@@ -56,7 +56,7 @@ export class ReporteComponent implements OnInit {
     const snap = await getDocs(q);
 
     // 2) Preparar head & body, consultando usuario por cada postulación
-    const head = ['Cédula', 'Nombre', 'Correo', 'Servicio', 'Beca', 'Fecha', 'Estado'];
+    const head = ['Cédula', 'Nombre', 'Correo', 'Servicio', 'Beca', 'Fecha', 'Porcentaje Beca', 'Estado'];
     const body: string[][] = [];
 
     for (const docSnap of snap.docs) {
@@ -75,6 +75,7 @@ export class ReporteComponent implements OnInit {
       const correo = userData['correo'] || 'Correo no Encontrado';
       const servicio = d.datosPersonales?.tipoServicio || d.tipoServicio || 'Tipo de Servicio no Especificado';
       const beca = d.datosPersonales?.tipoBeca || 'Tipo de Beca no Especificado';
+      const becaporcentaje = d.becaCalculadaPct ? `${d.becaCalculadaPct}%` : '0%';
 
       // formatear fecha dd/mm/yy
       let fecha = '';
@@ -91,7 +92,7 @@ export class ReporteComponent implements OnInit {
         : d.estadoAprobacion === false ? 'Rechazado'
           : 'Sin revisar';
 
-      body.push([cedula, nombre, correo, servicio, beca, fecha, estado]);
+      body.push([cedula, nombre, correo, servicio, beca, fecha, becaporcentaje, estado]);
     }
 
     // 3) Generar PDF
